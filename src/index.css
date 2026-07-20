@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark: #0a0a0f;
+  --color-dark-card: #12121a;
+  --color-dark-border: #1e1e2e;
+  --color-accent: #6366f1;
+  --color-accent-light: #818cf8;
+  --color-accent-glow: rgba(99, 102, 241, 0.3);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Dark theme (default) */
+.dark {
+  color-scheme: dark;
+}
+
+/* Light theme overrides */
+.light {
+  color-scheme: light;
+}
+
+.light .bg-dark {
+  background-color: #f8fafc;
+}
+
+.light .bg-dark-card {
+  background-color: #ffffff;
+}
+
+.light .bg-dark-card\/50 {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.light .border-dark-border {
+  border-color: #e2e8f0;
+}
+
+.light .text-white {
+  color: #1e293b;
+}
+
+.light .text-gray-300 {
+  color: #475569;
+}
+
+.light .text-gray-400 {
+  color: #475569;
+}
+
+.light .text-gray-500 {
+  color: #94a3b8;
+}
+
+.light .text-gray-600 {
+  color: #94a3b8;
+}
+
+.light .hover\:text-white:hover {
+  color: #1e293b;
+}
+
+.light .hover\:text-white {
+  color: #1e293b;
+}
+
+.light nav.bg-dark\/80 {
+  background-color: rgba(248, 250, 252, 0.8) !important;
+}
+
+.light nav.bg-dark\/95,
+.light .bg-dark\/95 {
+  background-color: rgba(248, 250, 252, 0.95) !important;
+}
+
+.light footer.bg-dark-card {
+  background-color: #ffffff;
+}
+
+.light .shadow-black\/20 {
+  --tw-shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Scroll reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hero floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.3; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 5s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+/* Hero decorative text */
+.hero-deco-text {
+  position: absolute;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  opacity: 0.3;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  font-family: 'Courier New', monospace;
+}
+
+.dark .hero-deco-text {
+  opacity: 0.4;
+}
+
+.light .hero-deco-text {
+  color: #1e293b;
+  opacity: 0.35;
+}
+
+/* Card hover glow */
+.card-glow {
+  transition: box-shadow 0.3s ease-out, border-color 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.card-glow:hover {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15), 0 0 40px rgba(99, 102, 241, 0.05);
+}
+
+/* Lightbox animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
