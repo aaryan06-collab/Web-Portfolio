@@ -23,6 +23,18 @@ const rightDeco = [
   { text: 'NLP', top: '88%', right: '4%', delay: '2.1s' },
 ];
 
+const mobileLeftDeco = [
+  { text: 'model.fit(X, y)', top: '10%', left: '2%', delay: '0s' },
+  { text: 'import numpy as np', top: '45%', left: '2%', delay: '1s' },
+  { text: 'Artificial Intelligence', top: '80%', left: '2%', delay: '2s' },
+];
+
+const mobileRightDeco = [
+  { text: 'Neural Networks', top: '15%', right: '2%', delay: '0.3s' },
+  { text: 'Deep Learning', top: '50%', right: '2%', delay: '1.3s' },
+  { text: 'NLP', top: '85%', right: '2%', delay: '2.1s' },
+];
+
 export default function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -33,7 +45,7 @@ export default function Hero() {
       {leftDeco.map((item, i) => (
         <span
           key={`l-${i}`}
-          className="hero-deco-text animate-float hidden lg:block"
+          className="hero-deco-text animate-float hidden md:block"
           style={{ top: item.top, left: item.left, animationDelay: item.delay }}
         >
           {item.text}
@@ -42,7 +54,25 @@ export default function Hero() {
       {rightDeco.map((item, i) => (
         <span
           key={`r-${i}`}
-          className="hero-deco-text animate-float-delayed hidden lg:block"
+          className="hero-deco-text animate-float-delayed hidden md:block"
+          style={{ top: item.top, right: item.right, animationDelay: item.delay }}
+        >
+          {item.text}
+        </span>
+      ))}
+      {mobileLeftDeco.map((item, i) => (
+        <span
+          key={`ml-${i}`}
+          className="hero-deco-text-mobile animate-float md:hidden"
+          style={{ top: item.top, left: item.left, animationDelay: item.delay }}
+        >
+          {item.text}
+        </span>
+      ))}
+      {mobileRightDeco.map((item, i) => (
+        <span
+          key={`mr-${i}`}
+          className="hero-deco-text-mobile animate-float-delayed md:hidden"
           style={{ top: item.top, right: item.right, animationDelay: item.delay }}
         >
           {item.text}

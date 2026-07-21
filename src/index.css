@@ -183,6 +183,27 @@ body {
   opacity: 0.35;
 }
 
+/* Hero decorative text - mobile */
+.hero-deco-text-mobile {
+  position: absolute;
+  font-size: 0.6rem;
+  color: var(--color-accent);
+  opacity: 0.2;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  font-family: 'Courier New', monospace;
+}
+
+.dark .hero-deco-text-mobile {
+  opacity: 0.25;
+}
+
+.light .hero-deco-text-mobile {
+  color: #1e293b;
+  opacity: 0.2;
+}
+
 /* Card hover glow */
 .card-glow {
   transition: box-shadow 0.3s ease-out, border-color 0.3s ease-out, transform 0.3s ease-out;
