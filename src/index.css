@@ -241,3 +241,35 @@ body {
 .animate-blink {
   animation: blink 0.8s step-end infinite;
 }
+
+.hover-rotate {
+  transition: transform 0.5s ease-out;
+}
+.hover-rotate:hover {
+  transform: rotate(360deg);
+}
+
+@keyframes bounce-sm {
+  0% { transform: scale(1) translateY(0); }
+  30% { transform: scale(1.35) translateY(-8px); }
+  50% { transform: scale(1.15) translateY(-2px); }
+  70% { transform: scale(1.25) translateY(-5px); }
+  100% { transform: scale(1.2) translateY(-4px); }
+}
+
+.linkedin-bounce {
+  transition: color 0.3s ease-out;
+}
+.linkedin-bounce:hover {
+  animation: bounce-sm 0.5s ease-out forwards;
+}
+
+/* Envelope lid open animation */
+.mail-lid {
+  transform-box: fill-box;
+  transform-origin: center top;
+  transition: transform 0.3s ease-out;
+}
+a:hover .mail-lid {
+  transform: rotateX(180deg);
+}

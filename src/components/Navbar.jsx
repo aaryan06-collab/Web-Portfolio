@@ -59,9 +59,9 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <button onClick={() => setPhotoOpen(true)} className="flex-shrink-0 cursor-pointer">
           <img
-            src="/profile pic.png"
+            src="/profile-pic.png"
             alt="Aaryan Bansal"
-            className="w-9 h-9 rounded-full object-cover ring-2 ring-accent/30"
+            className="w-9 h-9 rounded-full object-cover ring-2 ring-accent/30 transition-all duration-300 hover:scale-110 hover:ring-accent hover:shadow-lg hover:shadow-accent/25"
           />
         </button>
 
@@ -101,6 +101,7 @@ export default function Navbar() {
           <button
             onClick={() => setDark(!dark)}
             className="p-2 rounded-lg bg-dark-card border border-dark-border text-gray-400 hover:text-white transition-colors"
+            aria-label="Toggle theme"
           >
             {dark ? <Sun size={16} /> : <Moon size={16} />}
           </button>
@@ -110,12 +111,14 @@ export default function Navbar() {
           <button
             onClick={() => setDark(!dark)}
             className="p-2 rounded-lg bg-dark-card border border-dark-border text-gray-400 hover:text-white transition-colors"
+            aria-label="Toggle theme"
           >
             {dark ? <Sun size={16} /> : <Moon size={16} />}
           </button>
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="text-gray-400 hover:text-white transition-colors"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -139,7 +142,7 @@ export default function Navbar() {
         </div>
       )}
     </nav>
-    <Lightbox isOpen={photoOpen} onClose={() => setPhotoOpen(false)} src="/profile pic.png" alt="Aaryan Bansal" />
+    <Lightbox isOpen={photoOpen} onClose={() => setPhotoOpen(false)} src="/profile-pic.png" alt="Aaryan Bansal" />
     </>
   );
 }

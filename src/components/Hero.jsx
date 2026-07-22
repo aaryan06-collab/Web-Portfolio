@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowDown, Mail } from 'lucide-react';
-import { GithubIcon, LinkedinIcon } from './Icons';
+import { ArrowDown } from 'lucide-react';
+import { GithubIcon, LinkedinIcon, MailOpenIcon } from './Icons';
+import { contactInfo } from '../data/contact';
 
 const roles = [
   'AI/ML Enthusiast',
@@ -165,26 +166,29 @@ export default function Hero() {
 
         <div className="flex items-center justify-center gap-6">
           <a
-            href="https://github.com/aaryan06-collab"
+            href={contactInfo.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-500 hover:text-white transition-colors duration-200"
+            className="text-gray-500 hover:text-white hover-rotate inline-block"
+            aria-label="GitHub"
           >
             <GithubIcon size={22} />
           </a>
           <a
-            href="https://www.linkedin.com/in/aaryan--bansal"
+            href={contactInfo.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-500 hover:text-white transition-colors duration-200"
+            className="text-gray-500 hover:text-white linkedin-bounce inline-block"
+            aria-label="LinkedIn"
           >
             <LinkedinIcon size={22} />
           </a>
           <a
-            href="mailto:aaryanbansal0006@gmail.com"
-            className="text-gray-500 hover:text-white transition-colors duration-200"
+            href={`mailto:${contactInfo.email}`}
+            className="text-gray-500 hover:text-white transition-colors duration-200 inline-block"
+            aria-label="Email"
           >
-            <Mail size={22} />
+            <MailOpenIcon size={22} />
           </a>
         </div>
       </div>
@@ -192,6 +196,7 @@ export default function Hero() {
       <a
         href="#about"
         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-500 hover:text-white transition-colors animate-bounce"
+        aria-label="Scroll to about"
       >
         <ArrowDown size={24} />
       </a>

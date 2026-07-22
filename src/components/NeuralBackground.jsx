@@ -1,0 +1,199 @@
+import { useEffect, useRef } from 'react';
+
+const NODE_COUNT_DESKTOP = 50;
+const NODE_COUNT_MOBILE = 25;
+const CONNECTION_DIST = 150;
+const MOUSE_RADIUS = 200;
+const MOUSE_FORCE = 0.02;
+const NODE_SPEED = 0.3;
+const NODE_RADIUS = 2;
+const NODE_COLOR = [74, 222, 128];
+const NODE_OPACITY = 0.15;
+const LINE_OPACITY_MAX = 0.08;
+const LINE_GLOW_COLOR = 'rgba(74, 222, 128, 0.4)';
+
+const PARTICLE_COUNT = 35;
+const PARTICLE_SPEED = 0.6;
+const PARTICLE_RADIUS = 1;
+const PARTICLE_OPACITY = 0.3;
+const PARTICLE_TRAIL_OPACITY = 0.08;
+
+function createNode(w, h) {
+  return {
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: (Math.random() - 0.5) * NODE_SPEED * 2,
+    vy: (Math.random() - 0.5) * NODE_SPEED * 2,
+  };
+}
+
+function createParticle(w, h) {
+  return {
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: (Math.random() - 0.5) * PARTICLE_SPEED * 2,
+    vy: (Math.random() - 0.5) * PARTICLE_SPEED * 2,
+    prevX: 0,
+    prevY: 0,
+  };
+}
+
+export default function NeuralBackground() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animId;
+    let mouse = { x: -1000, y: -1000 };
+    let nodes = [];
+    let particles = [];
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      initEntities();
+    }
+
+    function initEntities() {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      const nodeCount = w < 768 ? NODE_COUNT_MOBILE : NODE_COUNT_DESKTOP;
+      nodes = Array.from({ length: nodeCount }, () => createNode(w, h));
+      particles = Array.from({ length: PARTICLE_COUNT }, () => {
+        const p = createParticle(w, h);
+        p.prevX = p.x;
+        p.prevY = p.y;
+        return p;
+      });
+    }
+
+    function animate() {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      for (const node of nodes) {
+        const dx = mouse.x - node.x;
+        const dy = mouse.y - node.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MOUSE_RADIUS && dist > 0) {
+          node.vx += (dx / dist) * MOUSE_FORCE;
+          node.vy += (dy / dist) * MOUSE_FORCE;
+        }
+
+        node.x += node.vx;
+        node.y += node.vy;
+
+        if (node.x < 0) { node.x = 0; node.vx *= -1; }
+        if (node.x > w) { node.x = w; node.vx *= -1; }
+        if (node.y < 0) { node.y = 0; node.vy *= -1; }
+        if (node.y > h) { node.y = h; node.vy *= -1; }
+
+        node.vx *= 0.999;
+        node.vy *= 0.999;
+      }
+
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[j].x - nodes[i].x;
+          const dy = nodes[j].y - nodes[i].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECTION_DIST) {
+            const alpha = (1 - dist / CONNECTION_DIST) * LINE_OPACITY_MAX;
+            ctx.save();
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = LINE_GLOW_COLOR;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+
+      for (const node of nodes) {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${NODE_OPACITY})`;
+        ctx.fill();
+      }
+
+      for (const p of particles) {
+        const pdx = mouse.x - p.x;
+        const pdy = mouse.y - p.y;
+        const pdist = Math.sqrt(pdx * pdx + pdy * pdy);
+        if (pdist < MOUSE_RADIUS && pdist > 0) {
+          p.vx += (pdx / pdist) * MOUSE_FORCE * 0.5;
+          p.vy += (pdy / pdist) * MOUSE_FORCE * 0.5;
+        }
+
+        p.prevX = p.x;
+        p.prevY = p.y;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) { p.x = 0; p.vx *= -1; }
+        if (p.x > w) { p.x = w; p.vx *= -1; }
+        if (p.y < 0) { p.y = 0; p.vy *= -1; }
+        if (p.y > h) { p.y = h; p.vy *= -1; }
+
+        p.vx *= 0.998;
+        p.vy *= 0.998;
+
+        ctx.beginPath();
+        ctx.moveTo(p.prevX, p.prevY);
+        ctx.lineTo(p.x, p.y);
+        ctx.strokeStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${PARTICLE_TRAIL_OPACITY})`;
+        ctx.lineWidth = PARTICLE_RADIUS;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${PARTICLE_OPACITY})`;
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(animate);
+    }
+
+    function onMouse(e) {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    }
+
+    function onMouseLeave() {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    }
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    resize();
+
+    window.addEventListener('mousemove', onMouse);
+    canvas.addEventListener('mouseleave', onMouseLeave);
+    animId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      ro.disconnect();
+      window.removeEventListener('mousemove', onMouse);
+      canvas.removeEventListener('mouseleave', onMouseLeave);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full pointer-events-none"
+    />
+  );
+}

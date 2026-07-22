@@ -11,23 +11,27 @@ import TechnicalTraining from './components/TechnicalTraining';
 import Achievements from './components/Achievements';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import NeuralBackground from './components/NeuralBackground';
 
 function App() {
   return (
-    <div className="bg-dark min-h-screen text-gray-300">
-      <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <Experience />
-      <Education />
-      <Leadership />
-      <Projects />
-      <Certifications />
-      <TechnicalTraining />
-      <Achievements />
-      <Contact />
-      <Footer />
+    <div className="bg-dark min-h-screen text-gray-300 relative">
+      <NeuralBackground />
+      <div className="relative z-10">
+        <Navbar />
+        <Hero />
+        <About />
+        <Skills />
+        <Experience />
+        <Education />
+        <Leadership />
+        <Projects />
+        <Certifications />
+        <TechnicalTraining />
+        <Achievements />
+        <Contact />
+        <Footer />
+      </div>
     </div>
   );
 }

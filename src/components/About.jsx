@@ -21,7 +21,7 @@ export default function About() {
           <div className="reveal bg-dark-card border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 card-glow">
             <div className="w-28 h-28 rounded-2xl overflow-hidden mb-6 ring-2 ring-accent/30">
               <img
-                src="/profile pic.png"
+                src="/profile-pic.png"
                 alt="Aaryan Bansal"
                 className="w-full h-full object-cover"
               />

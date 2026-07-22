@@ -42,6 +42,7 @@ export default function PdfViewer({ isOpen, onClose, src, title }) {
             <button
               onClick={onClose}
               className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+              aria-label="Close PDF viewer"
             >
               <X size={20} />
             </button>

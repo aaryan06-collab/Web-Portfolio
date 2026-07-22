@@ -1,5 +1,6 @@
-import { Mail, FileText } from 'lucide-react';
-import { GithubIcon, LinkedinIcon } from './Icons';
+import { FileText } from 'lucide-react';
+import { GithubIcon, LinkedinIcon, MailOpenIcon } from './Icons';
+import { contactInfo } from '../data/contact';
 
 export default function Footer() {
   return (
@@ -21,33 +22,36 @@ export default function Footer() {
             href="/cv.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-gray-500 hover:text-accent transition-colors duration-200"
+            className="flex items-center gap-1.5 text-gray-500 hover:text-white linkedin-bounce"
             title="View Resume"
           >
             <FileText size={18} />
             <span className="text-sm font-medium">CV</span>
           </a>
           <a
-            href="https://github.com/aaryan06-collab"
+            href={contactInfo.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-500 hover:text-white transition-colors duration-200"
+            className="text-gray-500 hover:text-white hover-rotate inline-block"
+            aria-label="GitHub"
           >
             <GithubIcon />
           </a>
           <a
-            href="https://www.linkedin.com/in/aaryan--bansal"
+            href={contactInfo.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-500 hover:text-white transition-colors duration-200"
+            className="text-gray-500 hover:text-white linkedin-bounce inline-block"
+            aria-label="LinkedIn"
           >
             <LinkedinIcon />
           </a>
           <a
-            href="mailto:aaryanbansal0006@gmail.com"
-            className="text-gray-500 hover:text-white transition-colors duration-200"
+            href={`mailto:${contactInfo.email}`}
+            className="text-gray-500 hover:text-white transition-colors duration-200 inline-block"
+            aria-label="Email"
           >
-            <Mail size={18} />
+            <MailOpenIcon size={18} />
           </a>
         </div>
       </div>

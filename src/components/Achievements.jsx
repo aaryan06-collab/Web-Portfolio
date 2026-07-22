@@ -17,7 +17,7 @@ const achievements = [
   {
     title: 'GeeksforGeeks Hackathon',
     detail: 'Participated in an in-office hackathon',
-    pdf: null,
+    pdf: '/certificates/Geeksforgeeks-Hackathon.pdf',
   },
 ];
 

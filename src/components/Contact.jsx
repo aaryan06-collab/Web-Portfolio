@@ -1,13 +1,14 @@
 import { Phone, Mail, MapPin } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
 import { GithubIcon, LinkedinIcon } from './Icons';
+import { contactInfo } from '../data/contact';
 
 const contactItems = [
-  { icon: <Phone className="text-accent" size={20} />, label: 'Phone', value: '+91 9891115788', href: 'tel:+919891115788' },
-  { icon: <Mail className="text-accent" size={20} />, label: 'Email', value: 'aaryanbansal0006@gmail.com', href: 'mailto:aaryanbansal0006@gmail.com' },
-  { icon: <LinkedinIcon size={20} />, label: 'LinkedIn', value: 'aaryan--bansal', href: 'https://www.linkedin.com/in/aaryan--bansal' },
-  { icon: <GithubIcon size={20} />, label: 'GitHub', value: 'aaryan06-collab', href: 'https://github.com/aaryan06-collab' },
-  { icon: <MapPin className="text-accent" size={20} />, label: 'Location', value: 'Delhi, India', href: null },
+  { icon: <Phone className="text-accent" size={20} />, label: 'Phone', value: contactInfo.phone, href: contactInfo.phoneHref },
+  { icon: <Mail className="text-accent" size={20} />, label: 'Email', value: contactInfo.email, href: `mailto:${contactInfo.email}` },
+  { icon: <LinkedinIcon size={20} />, label: 'LinkedIn', value: 'aaryan--bansal', href: contactInfo.linkedin },
+  { icon: <GithubIcon size={20} />, label: 'GitHub', value: 'aaryan06-collab', href: contactInfo.github },
+  { icon: <MapPin className="text-accent" size={20} />, label: 'Location', value: contactInfo.location, href: null },
 ];
 
 export default function Contact() {

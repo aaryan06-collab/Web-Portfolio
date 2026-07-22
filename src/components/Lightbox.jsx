@@ -26,6 +26,7 @@ export default function Lightbox({ isOpen, onClose, src, alt }) {
       <button
         onClick={onClose}
         className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 hover:bg-black/70 text-white/70 hover:text-white transition-colors backdrop-blur-sm"
+        aria-label="Close lightbox"
       >
         <X size={32} />
       </button>
