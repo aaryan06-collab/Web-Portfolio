@@ -1,5 +1,55 @@
+import { useState, useEffect, useRef } from 'react';
 import { ArrowDown, Mail } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './Icons';
+
+const roles = [
+  'AI/ML Enthusiast',
+  'B.Tech IT Student',
+  'Python Developer',
+  'Open Source Contributor',
+];
+
+const TYPING_SPEED = 80;
+const DELETING_SPEED = 40;
+const PAUSE_AFTER_TYPE = 2000;
+const PAUSE_AFTER_DELETE = 300;
+
+function useTypingEffect() {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    const currentRole = roles[roleIndex];
+
+    if (!isDeleting) {
+      if (text.length < currentRole.length) {
+        timeoutRef.current = setTimeout(() => {
+          setText(currentRole.slice(0, text.length + 1));
+        }, TYPING_SPEED);
+      } else {
+        timeoutRef.current = setTimeout(() => {
+          setIsDeleting(true);
+        }, PAUSE_AFTER_TYPE);
+      }
+    } else {
+      if (text.length > 0) {
+        timeoutRef.current = setTimeout(() => {
+          setText(text.slice(0, -1));
+        }, DELETING_SPEED);
+      } else {
+        setIsDeleting(false);
+        setRoleIndex((prev) => (prev + 1) % roles.length);
+        timeoutRef.current = setTimeout(() => {}, PAUSE_AFTER_DELETE);
+      }
+    }
+
+    return () => clearTimeout(timeoutRef.current);
+  }, [text, isDeleting, roleIndex]);
+
+  return text;
+}
 
 const leftDeco = [
   { text: 'model.fit(X, y)', top: '15%', left: '5%', delay: '0s' },
@@ -36,6 +86,8 @@ const mobileRightDeco = [
 ];
 
 export default function Hero() {
+  const typedText = useTypingEffect();
+
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
@@ -89,8 +141,9 @@ export default function Hero() {
             Bansal
           </span>
         </h1>
-        <p className="text-xl md:text-2xl text-gray-400 mb-10">
-          AI/ML Enthusiast & Developer
+        <p className="text-xl md:text-2xl text-gray-400 mb-10 h-8">
+          {typedText}
+          <span className="animate-blink text-accent font-light">|</span>
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
