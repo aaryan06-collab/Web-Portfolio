@@ -8,15 +8,26 @@ const MOUSE_FORCE = 0.02;
 const NODE_SPEED = 0.3;
 const NODE_RADIUS = 2;
 const NODE_COLOR = [74, 222, 128];
-const NODE_OPACITY = 0.15;
-const LINE_OPACITY_MAX = 0.08;
-const LINE_GLOW_COLOR = 'rgba(74, 222, 128, 0.4)';
+
+const DARK_OPACITIES = {
+  node: 0.15,
+  lineMax: 0.08,
+  glowAlpha: 0.4,
+  particle: 0.3,
+  trail: 0.08,
+};
+
+const LIGHT_OPACITIES = {
+  node: 0.7,
+  lineMax: 0.35,
+  glowAlpha: 0.7,
+  particle: 0.9,
+  trail: 0.3,
+};
 
 const PARTICLE_COUNT = 35;
 const PARTICLE_SPEED = 0.6;
 const PARTICLE_RADIUS = 1;
-const PARTICLE_OPACITY = 0.3;
-const PARTICLE_TRAIL_OPACITY = 0.08;
 
 function createNode(w, h) {
   return {
@@ -50,6 +61,18 @@ export default function NeuralBackground() {
     let nodes = [];
     let particles = [];
 
+    const opacitiesRef = { current: DARK_OPACITIES };
+
+    function readTheme() {
+      opacitiesRef.current = document.documentElement.classList.contains('light')
+        ? LIGHT_OPACITIES
+        : DARK_OPACITIES;
+    }
+    readTheme();
+
+    const themeObserver = new MutationObserver(readTheme);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
     function resize() {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = canvas.offsetWidth * dpr;
@@ -74,6 +97,7 @@ export default function NeuralBackground() {
     function animate() {
       const w = canvas.offsetWidth;
       const h = canvas.offsetHeight;
+      const o = opacitiesRef.current;
       ctx.clearRect(0, 0, w, h);
 
       for (const node of nodes) {
@@ -103,10 +127,10 @@ export default function NeuralBackground() {
           const dy = nodes[j].y - nodes[i].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < CONNECTION_DIST) {
-            const alpha = (1 - dist / CONNECTION_DIST) * LINE_OPACITY_MAX;
+            const alpha = (1 - dist / CONNECTION_DIST) * o.lineMax;
             ctx.save();
             ctx.shadowBlur = 6;
-            ctx.shadowColor = LINE_GLOW_COLOR;
+            ctx.shadowColor = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.glowAlpha})`;
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
@@ -121,7 +145,7 @@ export default function NeuralBackground() {
       for (const node of nodes) {
         ctx.beginPath();
         ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${NODE_OPACITY})`;
+        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.node})`;
         ctx.fill();
       }
 
@@ -150,13 +174,13 @@ export default function NeuralBackground() {
         ctx.beginPath();
         ctx.moveTo(p.prevX, p.prevY);
         ctx.lineTo(p.x, p.y);
-        ctx.strokeStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${PARTICLE_TRAIL_OPACITY})`;
+        ctx.strokeStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.trail})`;
         ctx.lineWidth = PARTICLE_RADIUS;
         ctx.stroke();
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${PARTICLE_OPACITY})`;
+        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.particle})`;
         ctx.fill();
       }
 
@@ -179,14 +203,15 @@ export default function NeuralBackground() {
     resize();
 
     window.addEventListener('mousemove', onMouse);
-    canvas.addEventListener('mouseleave', onMouseLeave);
+    document.addEventListener('mouseleave', onMouseLeave);
     animId = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(animId);
+      themeObserver.disconnect();
       ro.disconnect();
       window.removeEventListener('mousemove', onMouse);
-      canvas.removeEventListener('mouseleave', onMouseLeave);
+      document.removeEventListener('mouseleave', onMouseLeave);
     };
   }, []);
 

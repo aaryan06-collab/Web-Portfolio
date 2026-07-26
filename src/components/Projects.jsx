@@ -1,5 +1,6 @@
 import useScrollReveal from '../hooks/useScrollReveal';
 import { GithubIcon } from './Icons';
+import MagneticCard from './MagneticCard';
 
 const projects = [
   { title: 'OTP-Based Secure Login System with Loan Prediction Model' },
@@ -28,9 +29,9 @@ export default function Projects() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, i) => (
-            <div
+            <MagneticCard
               key={i}
-              className="reveal bg-dark-card border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 hover:scale-105 group card-glow"
+              className="reveal bg-dark-card border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 group card-glow"
               style={{ transitionDelay: `${i * 0.1}s` }}
             >
               <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-accent/20 transition-colors">
@@ -52,7 +53,7 @@ export default function Projects() {
                   </a>
                 )}
               </div>
-            </div>
+            </MagneticCard>
           ))}
         </div>
       </div>

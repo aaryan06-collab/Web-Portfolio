@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
+import MagneticCard from './MagneticCard';
 
 export default function About() {
   const ref = useScrollReveal();
@@ -18,7 +19,7 @@ export default function About() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="reveal bg-dark-card border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 card-glow">
+          <MagneticCard className="reveal bg-dark-card border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 card-glow">
             <div className="w-28 h-28 rounded-2xl overflow-hidden mb-6 ring-2 ring-accent/30">
               <img
                 src="/profile-pic.png"
@@ -35,7 +36,7 @@ export default function About() {
               <MapPin size={16} className="text-accent" />
               <span className="text-sm">Delhi, India</span>
             </div>
-          </div>
+          </MagneticCard>
 
           <div className="grid grid-cols-2 gap-4">
             {[
@@ -44,16 +45,16 @@ export default function About() {
               { label: 'CGPA', value: '7.20' },
               { label: 'Languages', value: '2' },
             ].map((stat, i) => (
-              <div
+              <MagneticCard
                 key={stat.label}
-                className="reveal bg-dark-card border border-dark-border rounded-xl p-6 text-center hover:border-accent/30 transition-all duration-300 hover:scale-105 card-glow"
+                className="reveal bg-dark-card border border-dark-border rounded-xl p-6 text-center hover:border-accent/30 transition-all duration-300 card-glow"
                 style={{ transitionDelay: `${i * 0.1}s` }}
               >
                 <div className="text-3xl font-bold bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent mb-2">
                   {stat.value}
                 </div>
                 <div className="text-gray-500 text-sm">{stat.label}</div>
-              </div>
+              </MagneticCard>
             ))}
           </div>
         </div>

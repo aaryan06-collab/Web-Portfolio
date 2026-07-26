@@ -1,5 +1,6 @@
 import { Building2 } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
+import MagneticCard from './MagneticCard';
 
 const experiences = [
   {
@@ -44,7 +45,7 @@ export default function Experience() {
 
         <div className="space-y-6">
           {experiences.map((exp, i) => (
-            <div
+            <MagneticCard
               key={i}
               className="reveal bg-dark-card border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 flex items-start gap-6 card-glow"
               style={{ transitionDelay: `${i * 0.15}s` }}
@@ -77,7 +78,7 @@ export default function Experience() {
                   ))}
                 </ul>
               </div>
-            </div>
+            </MagneticCard>
           ))}
         </div>
       </div>

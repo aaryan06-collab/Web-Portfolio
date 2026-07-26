@@ -1,5 +1,6 @@
 import { BookOpen } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
+import MagneticCard from './MagneticCard';
 
 const trainings = [
   {
@@ -34,9 +35,9 @@ export default function TechnicalTraining() {
 
         <div className="grid md:grid-cols-3 gap-6">
           {trainings.map((t, i) => (
-            <div
+            <MagneticCard
               key={i}
-              className="reveal bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 hover:scale-105 card-glow"
+              className="reveal bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 card-glow"
               style={{ transitionDelay: `${i * 0.12}s` }}
             >
               <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-5">
@@ -46,7 +47,7 @@ export default function TechnicalTraining() {
                 {t.title}
               </h3>
               <p className="text-gray-500 text-xs">{t.provider}</p>
-            </div>
+            </MagneticCard>
           ))}
         </div>
       </div>

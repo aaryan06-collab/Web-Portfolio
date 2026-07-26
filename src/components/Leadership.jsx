@@ -1,5 +1,6 @@
 import { Users } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
+import MagneticCard from './MagneticCard';
 
 const leadership = [
   {
@@ -32,7 +33,7 @@ export default function Leadership() {
 
         <div className="max-w-3xl mx-auto space-y-6">
           {leadership.map((item, i) => (
-            <div
+            <MagneticCard
               key={i}
               className="reveal bg-dark-card border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 flex items-start gap-6 card-glow"
               style={{ transitionDelay: `${i * 0.15}s` }}
@@ -45,7 +46,7 @@ export default function Leadership() {
                 <p className="text-accent-light text-sm mb-3">{item.org}</p>
                 <p className="text-gray-400">{item.description}</p>
               </div>
-            </div>
+            </MagneticCard>
           ))}
         </div>
       </div>

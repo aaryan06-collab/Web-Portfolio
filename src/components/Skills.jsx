@@ -1,5 +1,6 @@
 import { Code2, Brain, Database, Wrench } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
+import MagneticCard from './MagneticCard';
 
 const skillCategories = [
   {
@@ -44,9 +45,9 @@ export default function Skills() {
           {skillCategories.map((category) => {
             const Icon = category.icon;
             return (
-              <div
+              <MagneticCard
                 key={category.title}
-                className="reveal bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 hover:scale-105 card-glow"
+                className="reveal bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 card-glow"
               >
                 <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-5">
                   <Icon className="text-accent" size={26} />
@@ -62,7 +63,7 @@ export default function Skills() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </MagneticCard>
             );
           })}
         </div>

@@ -1,5 +1,6 @@
 import { GraduationCap } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
+import MagneticCard from './MagneticCard';
 
 export default function Education() {
   const ref = useScrollReveal();
@@ -15,7 +16,7 @@ export default function Education() {
         </div>
 
         <div className="max-w-2xl mx-auto">
-          <div className="reveal bg-dark border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 card-glow">
+          <MagneticCard className="reveal bg-dark border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 card-glow">
             <div className="flex items-start gap-6">
               <div className="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
                 <GraduationCap className="text-accent" size={28} />
@@ -33,7 +34,7 @@ export default function Education() {
                 </div>
               </div>
             </div>
-          </div>
+          </MagneticCard>
         </div>
       </div>
     </section>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Trophy } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
 import PdfViewer from './PdfViewer';
+import MagneticCard from './MagneticCard';
 
 const achievements = [
   {
@@ -38,13 +39,11 @@ export default function Achievements() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {achievements.map((a, i) => {
-            const CardWrapper = a.pdf ? 'button' : 'div';
-            return (
-              <CardWrapper
+          {achievements.map((a, i) => (
+              <MagneticCard
                 key={i}
                 {...(a.pdf ? { onClick: () => setSelected(a) } : {})}
-                className={`reveal bg-dark-card border border-dark-border rounded-2xl p-6 transition-all duration-300 hover:scale-105 card-glow ${
+                className={`reveal bg-dark-card border border-dark-border rounded-2xl p-6 transition-all duration-300 card-glow ${
                   a.pdf ? 'hover:border-accent/30 cursor-pointer' : ''
                 }`}
                 style={{ transitionDelay: `${i * 0.12}s` }}
@@ -56,9 +55,8 @@ export default function Achievements() {
                   {a.title}
                 </h3>
                 <p className="text-gray-500 text-xs">{a.detail}</p>
-              </CardWrapper>
-            );
-          })}
+              </MagneticCard>
+          ))}
         </div>
       </div>
 

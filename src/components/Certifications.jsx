@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Award } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
 import PdfViewer from './PdfViewer';
+import MagneticCard from './MagneticCard';
 
 const certifications = [
   {
@@ -52,10 +53,10 @@ export default function Certifications() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {certifications.map((cert, i) => (
-            <button
+            <MagneticCard
               key={i}
               onClick={() => setSelected(cert)}
-              className="reveal text-left bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 hover:scale-105 group card-glow cursor-pointer"
+              className="reveal text-left bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 group card-glow cursor-pointer"
               style={{ transitionDelay: `${i * 0.1}s` }}
             >
               <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-accent/20 transition-colors">
@@ -65,7 +66,7 @@ export default function Certifications() {
                 {cert.title}
               </h3>
               <p className="text-gray-500 text-xs">{cert.issuer}</p>
-            </button>
+            </MagneticCard>
           ))}
         </div>
       </div>
