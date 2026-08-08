@@ -20,7 +20,7 @@ export default function Contact() {
         <div className="reveal">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             Get In{' '}
-            <span className="bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
               Touch
             </span>
           </h2>

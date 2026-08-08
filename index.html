@@ -2,9 +2,46 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon-alpha-path.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Aaryan Bansal — B.Tech IT student, AI/ML enthusiast, and Python developer. View my projects, skills, and experience." />
+    <meta name="author" content="Aaryan Bansal" />
+    <meta name="theme-color" content="#ff4d2e" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Aaryan Bansal | Portfolio" />
+    <meta property="og:description" content="Aaryan Bansal — B.Tech IT student, AI/ML enthusiast, and Python developer. View my projects, skills, and experience." />
+    <meta property="og:image" content="/profile-pic.png" />
+    <meta property="og:url" content="https://aaryanbansal06.vercel.app/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Aaryan Bansal | Portfolio" />
+    <meta name="twitter:description" content="Aaryan Bansal — B.Tech IT student, AI/ML enthusiast, and Python developer." />
+    <meta name="twitter:image" content="/profile-pic.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Aaryan Bansal",
+        "url": "https://aaryanbansal06.vercel.app/",
+        "jobTitle": "B.Tech IT Student",
+        "description": "AI/ML enthusiast and Python developer.",
+        "sameAs": [
+          "https://github.com/aaryan06-collab",
+          "https://www.linkedin.com/in/aaryan--bansal"
+        ]
+      }
+    </script>
+    <script>
+      (function () {
+        var origin = window.location.origin;
+        var setMeta = function (selector, content) {
+          var el = document.querySelector(selector);
+          if (el) el.setAttribute('content', content);
+        };
+        setMeta('meta[property="og:url"]', origin + '/');
+        setMeta('meta[property="og:image"]', origin + '/profile-pic.png');
+        setMeta('meta[name="twitter:image"]', origin + '/profile-pic.png');
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

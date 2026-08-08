@@ -34,7 +34,7 @@ export default function Skills() {
         <div className="reveal">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             Technical{' '}
-            <span className="bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
               Skills
             </span>
           </h2>
@@ -57,7 +57,7 @@ export default function Skills() {
                   {category.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="text-xs px-3 py-1.5 bg-accent/10 text-accent-light rounded-lg border border-accent/20 transition-all duration-300 hover:bg-accent/20"
+                      className="text-xs px-3 py-1.5 bg-accent/10 text-accent-light rounded-lg border border-accent/20 transition-all duration-300 hover:bg-accent/20 hover:scale-110 hover:-rotate-2 active:scale-95"
                     >
                       {skill}
                     </span>

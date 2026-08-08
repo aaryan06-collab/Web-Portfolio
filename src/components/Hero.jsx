@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, MailOpenIcon } from './Icons';
 import { contactInfo } from '../data/contact';
+import MagneticCard from './MagneticCard';
 
 const roles = [
   'AI/ML Enthusiast',
@@ -88,12 +89,45 @@ const mobileRightDeco = [
 
 export default function Hero() {
   const typedText = useTypingEffect();
+  const sectionRef = useRef(null);
+  const textRef = useRef(null);
+  const blobsRef = useRef(null);
+
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    const onMove = (e) => {
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      if (textRef.current) textRef.current.style.transform = `translate3d(${nx * 12}px, ${ny * 9}px, 0)`;
+      if (blobsRef.current) blobsRef.current.style.transform = `translate3d(${-nx * 22}px, ${-ny * 16}px, 0)`;
+    };
+
+    const onLeave = () => {
+      if (textRef.current) textRef.current.style.transform = '';
+      if (blobsRef.current) blobsRef.current.style.transform = '';
+    };
+
+    window.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseleave', onLeave);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section ref={sectionRef} className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+      <div
+        ref={blobsRef}
+        className="absolute inset-0 pointer-events-none"
+        style={{ transition: 'transform 0.25s ease-out' }}
+      >
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-3/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+      </div>
 
       {leftDeco.map((item, i) => (
         <span
@@ -132,13 +166,17 @@ export default function Hero() {
         </span>
       ))}
 
-      <div className="relative z-10 text-center px-6 max-w-3xl">
+      <div
+        ref={textRef}
+        className="relative z-10 text-center px-6 max-w-3xl"
+        style={{ transition: 'transform 0.25s ease-out' }}
+      >
         <p className="text-accent font-medium tracking-wider uppercase text-sm mb-4">
           Welcome to my portfolio
         </p>
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
           Aaryan{' '}
-          <span className="bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
             Bansal
           </span>
         </h1>
@@ -148,20 +186,24 @@ export default function Hero() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <a
-            href="/cv.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-3 bg-accent hover:bg-accent-light text-white rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:shadow-accent/25"
-          >
-            View CV
-          </a>
-          <a
-            href="#contact"
-            className="px-8 py-3 border border-dark-border text-gray-300 hover:text-white hover:border-accent/50 rounded-xl font-medium transition-all duration-300"
-          >
-            Contact Me
-          </a>
+          <MagneticCard>
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-8 py-3 bg-accent hover:bg-accent-light text-white rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:shadow-accent/25"
+            >
+              View CV
+            </a>
+          </MagneticCard>
+          <MagneticCard>
+            <a
+              href="#contact"
+              className="inline-block px-8 py-3 border border-dark-border text-gray-300 hover:text-white hover:border-accent/50 rounded-xl font-medium transition-all duration-300"
+            >
+              Contact Me
+            </a>
+          </MagneticCard>
         </div>
 
         <div className="flex items-center justify-center gap-6">

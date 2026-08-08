@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Alpha</title>
+  <style>
+    .a { stroke: #ff4d2e; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    @media (prefers-color-scheme: light) {
+      .a { stroke: #d92d20; }
+    }
+  </style>
+  <path class="a" stroke-width="6.5" d="M13 17 C8 22 8 33 16 39 C24 45 34 41 35 31 C35 27 32 24 29 22 L47 44" />
+</svg>

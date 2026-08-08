@@ -11,19 +11,17 @@ const experiences = [
       'Leading application development projects and coordinating a development team.',
       'Managing delivery, testing, and feature implementation.',
     ],
-    hasLogo: true,
     logo: '/belvo-logo.jpeg',
   },
   {
     title: 'Python Programming Intern',
-    company: 'CodeAlpha',
-    date: '10 June 2026 – 10 July 2026',
+    company: 'CodeAlpha · Decode Labs',
+    date: 'Duration: 2 Months',
     description: [
       'Developed Python applications and strengthened programming and debugging skills.',
       'Promoted internship and career opportunities among students.',
     ],
-    hasLogo: true,
-    logo: '/codealpha.jpeg',
+    logo: '/python-logo.svg',
   },
 ];
 
@@ -36,7 +34,7 @@ export default function Experience() {
         <div className="reveal">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             Work{' '}
-            <span className="bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
               Experience
             </span>
           </h2>
@@ -51,7 +49,7 @@ export default function Experience() {
               style={{ transitionDelay: `${i * 0.15}s` }}
             >
               <div className="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
-                {exp.hasLogo ? (
+                {exp.logo ? (
                   <img
                     src={exp.logo}
                     alt={`${exp.company} Logo`}
@@ -71,9 +69,9 @@ export default function Experience() {
                 <p className="text-accent-light text-sm mb-3">{exp.company}</p>
                 <ul className="space-y-2">
                   {exp.description.map((desc, j) => (
-                    <li key={j} className="text-gray-400 flex items-start gap-2">
-                      <span className="text-accent mt-2">•</span>
-                      {desc}
+                    <li key={j} className="text-gray-400 flex items-start gap-2 leading-relaxed">
+                      <span className="text-accent">•</span>
+                      <span>{desc}</span>
                     </li>
                   ))}
                 </ul>

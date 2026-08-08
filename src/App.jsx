@@ -12,14 +12,24 @@ import Achievements from './components/Achievements';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NeuralBackground from './components/NeuralBackground';
+import ScrollProgress from './components/ScrollProgress';
+import LoaderSplash from './components/LoaderSplash';
+import CursorSpotlight from './components/CursorSpotlight';
+import ClickRipple from './components/ClickRipple';
+import MarqueeTicker from './components/MarqueeTicker';
 
 function App() {
   return (
     <div className="bg-dark min-h-screen text-gray-300 relative">
+      <ScrollProgress />
       <NeuralBackground />
+      <CursorSpotlight />
+      <ClickRipple />
+      <LoaderSplash />
       <div className="relative z-10">
         <Navbar />
         <Hero />
+        <MarqueeTicker />
         <About />
         <Skills />
         <Experience />

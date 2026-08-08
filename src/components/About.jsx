@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react';
 import useScrollReveal from '../hooks/useScrollReveal';
 import MagneticCard from './MagneticCard';
+import CountUp from './CountUp';
 
 export default function About() {
   const ref = useScrollReveal();
@@ -11,7 +12,7 @@ export default function About() {
         <div className="reveal">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             About{' '}
-            <span className="bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
               Me
             </span>
           </h2>
@@ -40,18 +41,22 @@ export default function About() {
 
           <div className="grid grid-cols-2 gap-4">
             {[
-              { label: 'Projects', value: '6+' },
-              { label: 'Certifications', value: '6' },
-              { label: 'CGPA', value: '7.20' },
-              { label: 'Languages', value: '2' },
+              { label: 'Projects', value: 6, suffix: '+' },
+              { label: 'Certifications', value: 6 },
+              { label: 'CGPA', value: 7.2, decimals: 2 },
+              { label: 'Languages', value: 2 },
             ].map((stat, i) => (
               <MagneticCard
                 key={stat.label}
                 className="reveal bg-dark-card border border-dark-border rounded-xl p-6 text-center hover:border-accent/30 transition-all duration-300 card-glow"
                 style={{ transitionDelay: `${i * 0.1}s` }}
               >
-                <div className="text-3xl font-bold bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent mb-2">
-                  {stat.value}
+                <div className="text-3xl font-bold bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent mb-2">
+                  <CountUp
+                    end={stat.value}
+                    decimals={stat.decimals ?? 0}
+                    suffix={stat.suffix ?? ''}
+                  />
                 </div>
                 <div className="text-gray-500 text-sm">{stat.label}</div>
               </MagneticCard>

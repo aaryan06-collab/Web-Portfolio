@@ -7,7 +7,7 @@ const MOUSE_RADIUS = 200;
 const MOUSE_FORCE = 0.02;
 const NODE_SPEED = 0.3;
 const NODE_RADIUS = 2;
-const NODE_COLOR = [74, 222, 128];
+let nodeColor = [74, 222, 128];
 
 const DARK_OPACITIES = {
   node: 0.15,
@@ -18,11 +18,11 @@ const DARK_OPACITIES = {
 };
 
 const LIGHT_OPACITIES = {
-  node: 0.7,
-  lineMax: 0.35,
-  glowAlpha: 0.7,
-  particle: 0.9,
-  trail: 0.3,
+  node: 0.8,
+  lineMax: 0.6,
+  glowAlpha: 0.8,
+  particle: 1,
+  trail: 0.4,
 };
 
 const PARTICLE_COUNT = 35;
@@ -49,6 +49,19 @@ function createParticle(w, h) {
   };
 }
 
+function clampSpeed(v, min, max) {
+  const speed = Math.hypot(v.vx, v.vy);
+  if (speed < min) {
+    const scale = min / (speed || 1);
+    v.vx *= scale;
+    v.vy *= scale;
+  } else if (speed > max) {
+    const scale = max / speed;
+    v.vx *= scale;
+    v.vy *= scale;
+  }
+}
+
 export default function NeuralBackground() {
   const canvasRef = useRef(null);
 
@@ -71,7 +84,10 @@ export default function NeuralBackground() {
     readTheme();
 
     const themeObserver = new MutationObserver(readTheme);
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
 
     function resize() {
       const dpr = window.devicePixelRatio || 1;
@@ -117,8 +133,7 @@ export default function NeuralBackground() {
         if (node.y < 0) { node.y = 0; node.vy *= -1; }
         if (node.y > h) { node.y = h; node.vy *= -1; }
 
-        node.vx *= 0.999;
-        node.vy *= 0.999;
+        clampSpeed(node, NODE_SPEED * 0.6, NODE_SPEED * 2);
       }
 
       for (let i = 0; i < nodes.length; i++) {
@@ -130,11 +145,11 @@ export default function NeuralBackground() {
             const alpha = (1 - dist / CONNECTION_DIST) * o.lineMax;
             ctx.save();
             ctx.shadowBlur = 6;
-            ctx.shadowColor = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.glowAlpha})`;
+            ctx.shadowColor = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${o.glowAlpha})`;
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${alpha})`;
+            ctx.strokeStyle = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${alpha})`;
             ctx.lineWidth = 1;
             ctx.stroke();
             ctx.restore();
@@ -145,7 +160,7 @@ export default function NeuralBackground() {
       for (const node of nodes) {
         ctx.beginPath();
         ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.node})`;
+        ctx.fillStyle = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${o.node})`;
         ctx.fill();
       }
 
@@ -168,19 +183,18 @@ export default function NeuralBackground() {
         if (p.y < 0) { p.y = 0; p.vy *= -1; }
         if (p.y > h) { p.y = h; p.vy *= -1; }
 
-        p.vx *= 0.998;
-        p.vy *= 0.998;
+        clampSpeed(p, PARTICLE_SPEED * 0.5, PARTICLE_SPEED * 2);
 
         ctx.beginPath();
         ctx.moveTo(p.prevX, p.prevY);
         ctx.lineTo(p.x, p.y);
-        ctx.strokeStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.trail})`;
+        ctx.strokeStyle = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${o.trail})`;
         ctx.lineWidth = PARTICLE_RADIUS;
         ctx.stroke();
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${NODE_COLOR[0]},${NODE_COLOR[1]},${NODE_COLOR[2]},${o.particle})`;
+        ctx.fillStyle = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${o.particle})`;
         ctx.fill();
       }
 

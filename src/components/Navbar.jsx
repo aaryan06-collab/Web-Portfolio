@@ -21,10 +21,11 @@ const moreLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [active, setActive] = useState('');
   const [dark, setDark] = useState(() => {
     const saved = localStorage.getItem('theme');
     if (saved) return saved === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return false;
   });
   const [scrolled, setScrolled] = useState(false);
   const [photoOpen, setPhotoOpen] = useState(false);
@@ -34,6 +35,38 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    let ticking = false;
+    const ids = [...navLinks, ...moreLinks].map((l) => l.href.slice(1));
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const pos = window.scrollY + window.innerHeight * 0.35;
+        let current = '';
+        for (const id of ids) {
+          const el = document.getElementById(id);
+          if (el && el.getBoundingClientRect().top + window.scrollY <= pos) current = `#${id}`;
+        }
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 4) current = '#contact';
+        setActive(current);
+        ticking = false;
+      });
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const activeInMore = moreLinks.some((l) => l.href === active);
+
+  function toggleTheme() {
+    const root = document.documentElement;
+    root.classList.add('theme-transition');
+    setDark(!dark);
+    setTimeout(() => root.classList.remove('theme-transition'), 500);
+  }
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
@@ -52,7 +85,7 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-dark/80 backdrop-blur-xl border-b border-dark-border shadow-lg shadow-black/20'
+          ? 'glass-nav'
           : 'bg-transparent'
       }`}
     >
@@ -70,16 +103,25 @@ export default function Navbar() {
             <a
               key={link.name}
               href={link.href}
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200"
+              className={`relative text-sm transition-colors duration-200 ${
+                active === link.href ? 'text-white' : 'text-gray-400 hover:text-white'
+              }`}
             >
               {link.name}
+              <span
+                className={`absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-gradient-to-r from-accent to-accent-2 transition-transform duration-300 origin-left ${
+                  active === link.href ? 'scale-x-100' : 'scale-x-0'
+                }`}
+              />
             </a>
           ))}
 
           <div className="relative">
             <button
               onClick={(e) => { e.stopPropagation(); setShowMore(!showMore); }}
-              className="text-sm text-gray-400 hover:text-white transition-colors duration-200"
+              className={`text-sm transition-colors duration-200 ${
+                activeInMore ? 'text-accent' : 'text-gray-400 hover:text-white'
+              }`}
             >
               More ▾
             </button>
@@ -89,7 +131,11 @@ export default function Navbar() {
                   <a
                     key={link.name}
                     href={link.href}
-                    className="block px-4 py-2 text-sm text-gray-400 hover:text-white hover:bg-dark-border/50 transition-colors duration-200"
+                    className={`block px-4 py-2 text-sm transition-colors duration-200 ${
+                      active === link.href
+                        ? 'text-accent bg-dark-border/50'
+                        : 'text-gray-400 hover:text-white hover:bg-dark-border/50'
+                    }`}
                   >
                     {link.name}
                   </a>
@@ -99,7 +145,7 @@ export default function Navbar() {
           </div>
 
           <button
-            onClick={() => setDark(!dark)}
+            onClick={toggleTheme}
             className="p-2 rounded-lg bg-dark-card border border-dark-border text-gray-400 hover:text-white transition-colors"
             aria-label="Toggle theme"
           >
@@ -109,7 +155,7 @@ export default function Navbar() {
 
         <div className="flex md:hidden items-center gap-3">
           <button
-            onClick={() => setDark(!dark)}
+            onClick={toggleTheme}
             className="p-2 rounded-lg bg-dark-card border border-dark-border text-gray-400 hover:text-white transition-colors"
             aria-label="Toggle theme"
           >
@@ -133,7 +179,9 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors duration-200 py-2"
+                className={`py-2 transition-colors duration-200 ${
+                  active === link.href ? 'text-accent' : 'text-gray-400 hover:text-white'
+                }`}
               >
                 {link.name}
               </a>
