@@ -1,35 +1,50 @@
-import { useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { useRef } from 'react';
 
-export default function MagneticCard({ children, className = '', style }) {
+export default function MagneticCard({ children, className = '', style, onClick }) {
   const ref = useRef(null);
-  const [transform, setTransform] = useState('');
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const rotateX = useSpring(x, { stiffness: 200, damping: 20 });
+  const rotateY = useSpring(y, { stiffness: 200, damping: 20 });
 
   function onMouseMove(e) {
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
     const cx = rect.width / 2;
     const cy = rect.height / 2;
-    const rotateX = ((y - cy) / cy) * -6;
-    const rotateY = ((x - cx) / cx) * 6;
-    setTransform(`perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`);
+    const px = e.clientX - rect.left - cx;
+    const py = e.clientY - rect.top - cy;
+    rotateX.set((-py / cy) * -8);
+    rotateY.set((px / cx) * 8);
   }
 
   function onMouseLeave() {
-    setTransform('');
+    rotateX.set(0);
+    rotateY.set(0);
   }
 
   return (
-    <div
+    <motion.div
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
       className={className}
-      style={{ ...style, transform, transition: 'transform 0.3s ease-out' }}
+      style={{
+        ...style,
+        perspective: 800,
+        rotateX,
+        rotateY,
+        scale: 1,
+        transformStyle: 'preserve-3d',
+      }}
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

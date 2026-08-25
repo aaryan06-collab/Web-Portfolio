@@ -112,51 +112,6 @@ body {
   --tw-shadow-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Scroll reveal animations */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-40px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.reveal-left.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.reveal-right {
-  opacity: 0;
-  transform: translateX(40px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.reveal-right.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
-
-.reveal-scale.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
 /* Hero floating animation */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -341,14 +296,63 @@ a:hover .mail-lid {
   mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 }
 
-/* Loader splash bar */
-@keyframes loader-bar {
-  from { width: 0%; }
-  to { width: 100%; }
+/* ── Loader: Glitch ── */
+@keyframes glitch-shift-1 {
+  0%, 100% { clip-path: inset(0 0 85% 0); transform: translate(0); }
+  20% { clip-path: inset(15% 0 60% 0); transform: translate(-4px, 2px); }
+  40% { clip-path: inset(50% 0 20% 0); transform: translate(4px, -1px); }
+  60% { clip-path: inset(70% 0 5% 0); transform: translate(-2px, 1px); }
+  80% { clip-path: inset(30% 0 40% 0); transform: translate(3px, -2px); }
+}
+@keyframes glitch-shift-2 {
+  0%, 100% { clip-path: inset(85% 0 0 0); transform: translate(0); }
+  20% { clip-path: inset(60% 0 15% 0); transform: translate(4px, -2px); }
+  40% { clip-path: inset(20% 0 50% 0); transform: translate(-4px, 1px); }
+  60% { clip-path: inset(5% 0 70% 0); transform: translate(2px, -1px); }
+  80% { clip-path: inset(40% 0 30% 0); transform: translate(-3px, 2px); }
+}
+@keyframes glitch-color {
+  0%, 100% { text-shadow: 2px 0 #ff4d2e, -2px 0 #00ffff; }
+  25% { text-shadow: -2px 0 #ff4d2e, 2px 0 #00ffff; }
+  50% { text-shadow: 2px 2px #ff4d2e, -2px -2px #00ffff; }
+  75% { text-shadow: -1px -2px #ff4d2e, 1px 2px #00ffff; }
+}
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 4px; }
 }
 
-.loader-bar {
-  animation: loader-bar 0.9s ease-out forwards;
+.loader-glitch {
+  color: #fff;
+  animation: glitch-color 0.3s infinite;
+}
+.loader-glitch::before,
+.loader-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.loader-glitch::before {
+  color: #ff4d2e;
+  animation: glitch-shift-1 0.4s infinite linear alternate-reverse;
+}
+.loader-glitch::after {
+  color: #00ffff;
+  animation: glitch-shift-2 0.4s infinite linear alternate-reverse;
+}
+.loader-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  animation: scanlines 0.2s linear infinite;
+  opacity: 0.4;
 }
 
 /* Smooth theme cross-fade */

@@ -1,22 +1,34 @@
+import { motion } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
-import useScrollReveal from '../hooks/useScrollReveal';
 import MagneticCard from './MagneticCard';
+import { fadeUp } from '../data/animations';
 
 export default function Education() {
-  const ref = useScrollReveal();
-
   return (
-    <section id="education" className="py-24 px-6 bg-dark-card/50" ref={ref}>
+    <section id="education" className="py-24 px-6 bg-dark-card/50">
       <div className="max-w-6xl mx-auto">
-        <div className="reveal">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             Education
           </h2>
           <div className="w-20 h-1 bg-accent mx-auto mb-16 rounded-full" />
-        </div>
+        </motion.div>
 
-        <div className="max-w-2xl mx-auto">
-          <MagneticCard className="reveal bg-dark border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 card-glow">
+        <motion.div
+          className="max-w-2xl mx-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+        >
+          <MagneticCard className="bg-dark border border-dark-border rounded-2xl p-8 hover:border-accent/30 transition-all duration-300 card-glow">
             <div className="flex items-start gap-6">
               <div className="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
                 <GraduationCap className="text-accent" size={28} />
@@ -35,7 +47,7 @@ export default function Education() {
               </div>
             </div>
           </MagneticCard>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

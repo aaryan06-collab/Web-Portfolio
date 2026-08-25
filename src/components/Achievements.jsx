@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Trophy } from 'lucide-react';
-import useScrollReveal from '../hooks/useScrollReveal';
 import PdfViewer from './PdfViewer';
 import MagneticCard from './MagneticCard';
+import { fadeUp, staggerContainer } from '../data/animations';
 
 const achievements = [
   {
@@ -23,30 +24,44 @@ const achievements = [
 ];
 
 export default function Achievements() {
-  const ref = useScrollReveal();
   const [selected, setSelected] = useState(null);
 
   return (
-    <section id="achievements" className="py-24 px-6" ref={ref}>
+    <section id="achievements" className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="reveal">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
               Achievements
             </span>
           </h2>
           <div className="w-20 h-1 bg-accent mx-auto mb-16 rounded-full" />
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid md:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={staggerContainer}
+        >
           {achievements.map((a, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              transition={{ duration: 0.5 }}
+            >
               <MagneticCard
-                key={i}
                 {...(a.pdf ? { onClick: () => setSelected(a) } : {})}
-                className={`reveal bg-dark-card border border-dark-border rounded-2xl p-6 transition-all duration-300 card-glow ${
+                className={`bg-dark-card border border-dark-border rounded-2xl p-6 transition-all duration-300 card-glow ${
                   a.pdf ? 'hover:border-accent/30 cursor-pointer' : ''
                 }`}
-                style={{ transitionDelay: `${i * 0.12}s` }}
               >
                 <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-5">
                   <Trophy className="text-accent" size={24} />
@@ -56,8 +71,9 @@ export default function Achievements() {
                 </h3>
                 <p className="text-gray-500 text-xs">{a.detail}</p>
               </MagneticCard>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       <PdfViewer

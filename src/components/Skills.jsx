@@ -1,6 +1,7 @@
+import { motion } from 'framer-motion';
 import { Code2, Brain, Database, Wrench } from 'lucide-react';
-import useScrollReveal from '../hooks/useScrollReveal';
 import MagneticCard from './MagneticCard';
+import { fadeUp, staggerContainer } from '../data/animations';
 
 const skillCategories = [
   {
@@ -26,12 +27,16 @@ const skillCategories = [
 ];
 
 export default function Skills() {
-  const ref = useScrollReveal();
-
   return (
-    <section id="skills" className="py-24 px-6 bg-dark-card/50" ref={ref}>
+    <section id="skills" className="py-24 px-6 bg-dark-card/50">
       <div className="max-w-6xl mx-auto">
-        <div className="reveal">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUp}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             Technical{' '}
             <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
@@ -39,34 +44,43 @@ export default function Skills() {
             </span>
           </h2>
           <div className="w-20 h-1 bg-accent mx-auto mb-16 rounded-full" />
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={staggerContainer}
+        >
           {skillCategories.map((category) => {
             const Icon = category.icon;
             return (
-              <MagneticCard
+              <motion.div
                 key={category.title}
-                className="reveal bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 card-glow"
+                variants={fadeUp}
+                transition={{ duration: 0.5 }}
               >
-                <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-5">
-                  <Icon className="text-accent" size={26} />
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-4">{category.title}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {category.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="text-xs px-3 py-1.5 bg-accent/10 text-accent-light rounded-lg border border-accent/20 transition-all duration-300 hover:bg-accent/20 hover:scale-110 hover:-rotate-2 active:scale-95"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </MagneticCard>
+                <MagneticCard className="bg-dark border border-dark-border rounded-2xl p-6 hover:border-accent/30 transition-all duration-300 card-glow">
+                  <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-5">
+                    <Icon className="text-accent" size={26} />
+                  </div>
+                  <h3 className="text-white font-semibold text-lg mb-4">{category.title}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {category.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="text-xs px-3 py-1.5 bg-accent/10 text-accent-light rounded-lg border border-accent/20 transition-all duration-300 hover:bg-accent/20 hover:scale-110 hover:-rotate-2 active:scale-95"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </MagneticCard>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

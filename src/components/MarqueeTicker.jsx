@@ -1,4 +1,5 @@
-import useScrollReveal from '../hooks/useScrollReveal';
+import { motion } from 'framer-motion';
+import { fadeUp } from '../data/animations';
 
 const skills = [
   'Python',
@@ -26,10 +27,15 @@ const skills = [
 ];
 
 export default function MarqueeTicker() {
-  const ref = useScrollReveal();
-
   return (
-    <div className="border-y border-dark-border bg-dark-card/50 py-4 overflow-hidden" ref={ref}>
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={fadeUp}
+      transition={{ duration: 0.5 }}
+      className="border-y border-dark-border bg-dark-card/50 py-4 overflow-hidden"
+    >
       <div className="marquee-mask flex overflow-hidden">
         <div className="animate-marquee flex shrink-0 items-center gap-8 pr-8">
           {[...skills, ...skills].map((skill, i) => (
@@ -44,6 +50,6 @@ export default function MarqueeTicker() {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

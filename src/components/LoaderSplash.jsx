@@ -1,5 +1,16 @@
 import { useEffect, useState } from 'react';
 
+function GlitchLoader() {
+  return (
+    <div className="relative">
+      <div className="loader-glitch relative text-6xl font-bold text-white" data-text="AB">
+        AB
+      </div>
+      <div className="loader-scanlines absolute inset-0 pointer-events-none" />
+    </div>
+  );
+}
+
 export default function LoaderSplash() {
   const [phase, setPhase] = useState('visible');
 
@@ -25,13 +36,7 @@ export default function LoaderSplash() {
         phase === 'fading' ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      <div className="text-5xl font-bold bg-gradient-to-r from-accent to-accent-light bg-clip-text text-transparent mb-4">
-        AB
-      </div>
-      <p className="text-gray-400 text-lg mb-6">Aaryan Bansal</p>
-      <div className="w-40 h-1 bg-dark-border rounded-full overflow-hidden">
-        <div className="loader-bar h-full bg-gradient-to-r from-accent to-accent-2 rounded-full" />
-      </div>
+      <GlitchLoader />
     </div>
   );
 }
