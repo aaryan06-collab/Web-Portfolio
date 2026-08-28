@@ -9,6 +9,8 @@ const NODE_SPEED = 0.3;
 const NODE_RADIUS = 2;
 let nodeColor = [74, 222, 128];
 
+const SMOOTHING = 0.1;
+
 const DARK_OPACITIES = {
   node: 0.15,
   lineMax: 0.08,
@@ -74,12 +76,14 @@ export default function NeuralBackground() {
     let nodes = [];
     let particles = [];
 
-    const opacitiesRef = { current: DARK_OPACITIES };
+    const currentO = { ...DARK_OPACITIES };
+    const targetO = { ...DARK_OPACITIES };
 
     function readTheme() {
-      opacitiesRef.current = document.documentElement.classList.contains('light')
+      const palette = document.documentElement.classList.contains('light')
         ? LIGHT_OPACITIES
         : DARK_OPACITIES;
+      Object.assign(targetO, palette);
     }
     readTheme();
 
@@ -113,7 +117,10 @@ export default function NeuralBackground() {
     function animate() {
       const w = canvas.offsetWidth;
       const h = canvas.offsetHeight;
-      const o = opacitiesRef.current;
+      for (const key of Object.keys(currentO)) {
+        currentO[key] += (targetO[key] - currentO[key]) * SMOOTHING;
+      }
+      const o = currentO;
       ctx.clearRect(0, 0, w, h);
 
       for (const node of nodes) {
