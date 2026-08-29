@@ -1,8 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
+import {
+  motion,
+  useMotionValue,
+  useMotionTemplate,
+  useSpring,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, MailOpenIcon } from './Icons';
 import { contactInfo } from '../data/contact';
 import MagneticCard from './MagneticCard';
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 24, filter: 'blur(6px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+};
 
 const roles = [
   'AI/ML Enthusiast',
@@ -11,46 +29,97 @@ const roles = [
   'Open Source Contributor',
 ];
 
-const TYPING_SPEED = 80;
-const DELETING_SPEED = 40;
-const PAUSE_AFTER_TYPE = 2000;
-const PAUSE_AFTER_DELETE = 300;
+const ROLE_DURATION = 3500;
+const WORD_DURATION = 0.5;
 
-function useTypingEffect() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [text, setText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const timeoutRef = useRef(null);
+function useRotatingRole() {
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const currentRole = roles[roleIndex];
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
 
-    if (!isDeleting) {
-      if (text.length < currentRole.length) {
-        timeoutRef.current = setTimeout(() => {
-          setText(currentRole.slice(0, text.length + 1));
-        }, TYPING_SPEED);
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % roles.length);
+    }, ROLE_DURATION);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return roles[index];
+}
+
+function RevealLine({ role }) {
+  const words = role.split(' ');
+
+  return (
+    <motion.span
+      key={role}
+      className="inline-block"
+      initial="hidden"
+      animate="visible"
+      variants={{ hidden: {}, visible: { transition: { staggerChildren: WORD_DURATION / words.length } } }}
+    >
+      {words.map((word, i) => (
+        <span key={i} className="inline-block whitespace-nowrap">
+          {word.split('').map((ch, j) => (
+            <motion.span
+              key={j}
+              className="inline-block"
+              variants={{
+                hidden: { opacity: 0, y: 8, filter: 'blur(6px)' },
+                visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+              }}
+              transition={{ duration: WORD_DURATION, ease: 'easeOut' }}
+            >
+              {ch}
+            </motion.span>
+          ))}
+          {i < words.length - 1 && <span>&nbsp;</span>}
+        </span>
+      ))}
+    </motion.span>
+  );
+}
+
+function RepelText({ text, className, style }) {
+  const ref = useRef(null);
+  const x = useSpring(0, { stiffness: 60, damping: 14 });
+  const y = useSpring(0, { stiffness: 60, damping: 14 });
+
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    const onMove = (e) => {
+      const el = ref.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const dx = e.clientX - (rect.left + rect.width / 2);
+      const dy = e.clientY - (rect.top + rect.height / 2);
+      const dist = Math.hypot(dx, dy);
+      const strength = dist < 400 ? (1 - dist / 400) * 26 : 0;
+      if (strength > 0) {
+        const norm = dist || 1;
+        x.set((dx / norm) * strength);
+        y.set((dy / norm) * strength);
       } else {
-        timeoutRef.current = setTimeout(() => {
-          setIsDeleting(true);
-        }, PAUSE_AFTER_TYPE);
+        x.set(0);
+        y.set(0);
       }
-    } else {
-      if (text.length > 0) {
-        timeoutRef.current = setTimeout(() => {
-          setText(text.slice(0, -1));
-        }, DELETING_SPEED);
-      } else {
-        setIsDeleting(false);
-        setRoleIndex((prev) => (prev + 1) % roles.length);
-        timeoutRef.current = setTimeout(() => {}, PAUSE_AFTER_DELETE);
-      }
-    }
+    };
 
-    return () => clearTimeout(timeoutRef.current);
-  }, [text, isDeleting, roleIndex]);
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [x, y]);
 
-  return text;
+  return (
+    <span ref={ref} className={className} style={style}>
+      <motion.span className="inline-block" style={{ x, y }}>
+        {text}
+      </motion.span>
+    </span>
+  );
 }
 
 const leftDeco = [
@@ -88,10 +157,18 @@ const mobileRightDeco = [
 ];
 
 export default function Hero() {
-  const typedText = useTypingEffect();
+  const role = useRotatingRole();
   const sectionRef = useRef(null);
-  const textRef = useRef(null);
   const blobsRef = useRef(null);
+
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rotateX = useSpring(useMotionValue(0), { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(useMotionValue(0), { stiffness: 150, damping: 20 });
+  const glowX = useSpring(useMotionValue(-1000), { stiffness: 120, damping: 18 });
+  const glowY = useSpring(useMotionValue(-1000), { stiffness: 120, damping: 18 });
+
+  const glowBackground = useMotionTemplate`radial-gradient(circle 280px at ${glowX}px ${glowY}px, rgba(255,255,255,0.07), transparent 70%)`;
 
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -100,25 +177,44 @@ export default function Hero() {
     const onMove = (e) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
-      if (textRef.current) textRef.current.style.transform = `translate3d(${nx * 12}px, ${ny * 9}px, 0)`;
-      if (blobsRef.current) blobsRef.current.style.transform = `translate3d(${-nx * 22}px, ${-ny * 16}px, 0)`;
+      mx.set(nx);
+      my.set(ny);
+      rotateY.set(nx * 5);
+      rotateX.set(-ny * 5);
+      glowX.set(e.clientX, true);
+      glowY.set(e.clientY, true);
+      if (blobsRef.current) {
+        blobsRef.current.style.transform = `translate3d(${-nx * 22}px, ${-ny * 16}px, 0)`;
+      }
     };
 
     const onLeave = () => {
-      if (textRef.current) textRef.current.style.transform = '';
+      mx.set(0);
+      my.set(0);
+      rotateX.set(0);
+      rotateY.set(0);
+      glowX.set(-1000);
+      glowY.set(-1000);
       if (blobsRef.current) blobsRef.current.style.transform = '';
     };
 
-    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mousemove', onMove, { passive: true });
     document.addEventListener('mouseleave', onLeave);
     return () => {
       window.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseleave', onLeave);
     };
-  }, []);
+  }, [mx, my, rotateX, rotateY, glowX, glowY]);
+
+  const { scrollY } = useScroll();
+  const nameY = useTransform(scrollY, [0, 600], [0, 80]);
+  const nameOpacity = useTransform(scrollY, [0, 500], [1, 0.4]);
+
+  const decoClass = (mobile) =>
+    `${mobile ? 'hero-deco-text-mobile' : 'hero-deco-text'} ${mobile ? 'md:hidden' : 'hidden md:block'}`;
 
   return (
-    <section ref={sectionRef} className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section ref={sectionRef} className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ perspective: 1000 }}>
       <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
       <div
         ref={blobsRef}
@@ -129,111 +225,112 @@ export default function Hero() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-3/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
       </div>
 
-      {leftDeco.map((item, i) => (
-        <span
-          key={`l-${i}`}
-          className="hero-deco-text animate-float hidden md:block"
-          style={{ top: item.top, left: item.left, animationDelay: item.delay }}
-        >
-          {item.text}
-        </span>
-      ))}
-      {rightDeco.map((item, i) => (
-        <span
-          key={`r-${i}`}
-          className="hero-deco-text animate-float-delayed hidden md:block"
-          style={{ top: item.top, right: item.right, animationDelay: item.delay }}
-        >
-          {item.text}
-        </span>
-      ))}
-      {mobileLeftDeco.map((item, i) => (
-        <span
-          key={`ml-${i}`}
-          className="hero-deco-text-mobile animate-float md:hidden"
-          style={{ top: item.top, left: item.left, animationDelay: item.delay }}
-        >
-          {item.text}
-        </span>
-      ))}
-      {mobileRightDeco.map((item, i) => (
-        <span
-          key={`mr-${i}`}
-          className="hero-deco-text-mobile animate-float-delayed md:hidden"
-          style={{ top: item.top, right: item.right, animationDelay: item.delay }}
-        >
-          {item.text}
-        </span>
-      ))}
+      {[...leftDeco, ...mobileLeftDeco].map((item, i) => {
+        const mobile = i >= leftDeco.length;
+        return (
+          <RepelText
+            key={`l-${i}`}
+            text={item.text}
+            className={`${decoClass(mobile)} animate-float`}
+            style={{ top: item.top, left: item.left, animationDelay: item.delay }}
+          />
+        );
+      })}
+      {[...rightDeco, ...mobileRightDeco].map((item, i) => {
+        const mobile = i >= rightDeco.length;
+        return (
+          <RepelText
+            key={`r-${i}`}
+            text={item.text}
+            className={`${decoClass(mobile)} animate-float`}
+            style={{ top: item.top, right: item.right, animationDelay: item.delay }}
+          />
+        );
+      })}
 
-      <div
-        ref={textRef}
+      <motion.div
         className="relative z-10 text-center px-6 max-w-3xl"
-        style={{ transition: 'transform 0.25s ease-out' }}
+        style={{ rotateX, rotateY, y: nameY, opacity: nameOpacity, transformStyle: 'preserve-3d' }}
       >
-        <p className="text-accent font-medium tracking-wider uppercase text-sm mb-4">
-          Welcome to my portfolio
-        </p>
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-          Aaryan{' '}
-          <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
-            Bansal
-          </span>
-        </h1>
-        <p className="text-xl md:text-2xl text-gray-400 mb-10 h-8">
-          {typedText}
-          <span className="animate-blink text-accent font-light">|</span>
-        </p>
+        <motion.div
+          style={{ perspective: 800, transformStyle: 'preserve-3d' }}
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.p variants={itemVariants} className="text-accent font-medium tracking-wider uppercase text-sm mb-4">
+            Welcome to my portfolio
+          </motion.p>
+          <motion.h1
+            variants={itemVariants}
+            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+          >
+            Aaryan{' '}
+            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
+              Bansal
+            </span>
+          </motion.h1>
+          <motion.p variants={itemVariants} className="text-xl md:text-2xl text-gray-400 mb-10 h-8">
+            <RevealLine role={role} />
+          </motion.p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <MagneticCard>
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <MagneticCard>
+              <a
+                href="/cv.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ transform: 'translateZ(30px)' }}
+                className="inline-block px-8 py-3 bg-accent hover:bg-accent-light text-white rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:shadow-accent/25"
+              >
+                View CV
+              </a>
+            </MagneticCard>
+            <MagneticCard>
+              <a
+                href="#contact"
+                style={{ transform: 'translateZ(30px)' }}
+                className="inline-block px-8 py-3 border border-dark-border text-gray-300 hover:text-white hover:border-accent/50 rounded-xl font-medium transition-all duration-300"
+              >
+                Contact Me
+              </a>
+            </MagneticCard>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="flex items-center justify-center gap-6">
             <a
-              href="/cv.pdf"
+              href={contactInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-8 py-3 bg-accent hover:bg-accent-light text-white rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:shadow-accent/25"
+              className="text-gray-500 hover:text-white hover-rotate inline-block"
+              aria-label="GitHub"
             >
-              View CV
+              <GithubIcon size={22} />
             </a>
-          </MagneticCard>
-          <MagneticCard>
             <a
-              href="#contact"
-              className="inline-block px-8 py-3 border border-dark-border text-gray-300 hover:text-white hover:border-accent/50 rounded-xl font-medium transition-all duration-300"
+              href={contactInfo.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-white linkedin-bounce inline-block"
+              aria-label="LinkedIn"
             >
-              Contact Me
+              <LinkedinIcon size={22} />
             </a>
-          </MagneticCard>
-        </div>
+            <a
+              href={`mailto:${contactInfo.email}`}
+              className="text-gray-500 hover:text-white transition-colors duration-200 inline-block"
+              aria-label="Email"
+            >
+              <MailOpenIcon size={22} />
+            </a>
+          </motion.div>
+        </motion.div>
+      </motion.div>
 
-        <div className="flex items-center justify-center gap-6">
-          <a
-            href={contactInfo.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-500 hover:text-white hover-rotate inline-block"
-            aria-label="GitHub"
-          >
-            <GithubIcon size={22} />
-          </a>
-          <a
-            href={contactInfo.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-500 hover:text-white linkedin-bounce inline-block"
-            aria-label="LinkedIn"
-          >
-            <LinkedinIcon size={22} />
-          </a>
-          <a
-            href={`mailto:${contactInfo.email}`}
-            className="text-gray-500 hover:text-white transition-colors duration-200 inline-block"
-            aria-label="Email"
-          >
-            <MailOpenIcon size={22} />
-          </a>
-        </div>
-      </div>
+      <motion.div
+        className="pointer-events-none fixed inset-0 z-[5] hidden md:block"
+        style={{ background: glowBackground }}
+      />
 
       <a
         href="#about"

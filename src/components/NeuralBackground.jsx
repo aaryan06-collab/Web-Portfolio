@@ -7,6 +7,7 @@ const MOUSE_RADIUS = 200;
 const MOUSE_FORCE = 0.02;
 const NODE_SPEED = 0.3;
 const NODE_RADIUS = 2;
+const LINE_GLOW_RADIUS = 220;
 let nodeColor = [74, 222, 128];
 
 const SMOOTHING = 0.1;
@@ -20,11 +21,11 @@ const DARK_OPACITIES = {
 };
 
 const LIGHT_OPACITIES = {
-  node: 0.8,
-  lineMax: 0.6,
-  glowAlpha: 0.8,
-  particle: 1,
-  trail: 0.4,
+  node: 0.6,
+  lineMax: 0.4,
+  glowAlpha: 0.6,
+  particle: 0.7,
+  trail: 0.3,
 };
 
 const PARTICLE_COUNT = 35;
@@ -149,10 +150,21 @@ export default function NeuralBackground() {
           const dy = nodes[j].y - nodes[i].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < CONNECTION_DIST) {
-            const alpha = (1 - dist / CONNECTION_DIST) * o.lineMax;
+            let alpha = (1 - dist / CONNECTION_DIST) * o.lineMax;
+            let glow = o.glowAlpha;
+            const midX = (nodes[i].x + nodes[j].x) / 2;
+            const midY = (nodes[i].y + nodes[j].y) / 2;
+            const mdx = mouse.x - midX;
+            const mdy = mouse.y - midY;
+            const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+            if (mdist < LINE_GLOW_RADIUS) {
+              const boost = (1 - mdist / LINE_GLOW_RADIUS);
+              alpha = Math.min(o.lineMax * 1.6, alpha + boost * o.lineMax * 1.4);
+              glow = Math.min(1, o.glowAlpha + boost * 0.7);
+            }
             ctx.save();
-            ctx.shadowBlur = 6;
-            ctx.shadowColor = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${o.glowAlpha})`;
+            ctx.shadowBlur = 6 + (glow - o.glowAlpha > 0.05 ? 12 : 0);
+            ctx.shadowColor = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${glow})`;
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
@@ -165,9 +177,19 @@ export default function NeuralBackground() {
       }
 
       for (const node of nodes) {
+        const ndx = mouse.x - node.x;
+        const ndy = mouse.y - node.y;
+        const ndist = Math.sqrt(ndx * ndx + ndy * ndy);
+        let nodeAlpha = o.node;
+        let nodeRadius = NODE_RADIUS;
+        if (ndist < MOUSE_RADIUS) {
+          const boost = (1 - ndist / MOUSE_RADIUS);
+          nodeAlpha = Math.min(1, o.node + boost * 0.5);
+          nodeRadius = NODE_RADIUS + boost * 1.5;
+        }
         ctx.beginPath();
-        ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${o.node})`;
+        ctx.arc(node.x, node.y, nodeRadius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${nodeColor[0]},${nodeColor[1]},${nodeColor[2]},${nodeAlpha})`;
         ctx.fill();
       }
 

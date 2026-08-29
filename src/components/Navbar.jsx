@@ -65,7 +65,7 @@ export default function Navbar() {
     const root = document.documentElement;
     root.classList.add('theme-transition');
     setDark(!dark);
-    setTimeout(() => root.classList.remove('theme-transition'), 350);
+    setTimeout(() => root.classList.remove('theme-transition'), 550);
   }
 
   useEffect(() => {

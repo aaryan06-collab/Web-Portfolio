@@ -17,6 +17,8 @@ import LoaderSplash from './components/LoaderSplash';
 import CursorSpotlight from './components/CursorSpotlight';
 import ClickRipple from './components/ClickRipple';
 import MarqueeTicker from './components/MarqueeTicker';
+import ChatWidget from './components/ChatWidget';
+import QuickNav from './components/QuickNav';
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
         <Contact />
         <Footer />
       </div>
+      <ChatWidget />
+      <QuickNav />
     </div>
   );
 }

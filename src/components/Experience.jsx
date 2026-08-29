@@ -24,6 +24,15 @@ const experiences = [
     ],
     logo: '/python-logo.svg',
   },
+  {
+    title: 'HR Role',
+    company: 'Amanitvam Foundation',
+    date: 'Started Aug 2026',
+    description: [
+      'Assisted with human resources and team coordination responsibilities.',
+    ],
+    logo: '/amaanitvam-logo.webp',
+  },
 ];
 
 export default function Experience() {

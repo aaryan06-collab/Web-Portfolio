@@ -39,7 +39,7 @@ export default function MagneticCard({ children, className = '', style, onClick 
         rotateX,
         rotateY,
         scale: 1,
-        transformStyle: 'preserve-3d',
+        transformOrigin: 'center center',
       }}
       whileHover={{ scale: 1.03 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
