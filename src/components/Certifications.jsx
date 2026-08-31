@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Award } from 'lucide-react';
 import PdfViewer from './PdfViewer';
 import MagneticCard from './MagneticCard';
+import SectionHeading from './SectionHeading';
 import { fadeUp, staggerContainer } from '../data/animations';
 
 const certifications = [
@@ -44,18 +45,7 @@ export default function Certifications() {
   return (
     <section id="certifications" className="py-24 px-6 bg-dark-card/50">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-            Certifications
-          </h2>
-          <div className="w-20 h-1 bg-accent mx-auto mb-16 rounded-full" />
-        </motion.div>
+        <SectionHeading accent="Certifications" />
 
         <motion.div
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"

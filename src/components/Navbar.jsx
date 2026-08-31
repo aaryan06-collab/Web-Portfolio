@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import Lightbox from './Lightbox';
+import useScrollPosition from '../hooks/useScrollPosition';
 
 const navLinks = [
   { name: 'About', href: '#about' },
@@ -27,14 +29,8 @@ export default function Navbar() {
     if (saved) return saved === 'dark';
     return false;
   });
-  const [scrolled, setScrolled] = useState(false);
+  const { scrolled } = useScrollPosition(20);
   const [photoOpen, setPhotoOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -125,23 +121,31 @@ export default function Navbar() {
             >
               More ▾
             </button>
-            {showMore && (
-              <div className="absolute top-full right-0 mt-2 bg-dark-card border border-dark-border rounded-xl shadow-xl py-2 min-w-[160px] z-50">
-                {moreLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    className={`block px-4 py-2 text-sm transition-colors duration-200 ${
-                      active === link.href
-                        ? 'text-accent bg-dark-border/50'
-                        : 'text-gray-400 hover:text-white hover:bg-dark-border/50'
-                    }`}
-                  >
-                    {link.name}
-                  </a>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {showMore && (
+                <motion.div
+                  className="absolute top-full right-0 mt-2 bg-dark-card border border-dark-border rounded-xl shadow-xl py-2 min-w-[160px] z-50"
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                >
+                  {moreLinks.map((link) => (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      className={`block px-4 py-2 text-sm transition-colors duration-200 ${
+                        active === link.href
+                          ? 'text-accent bg-dark-border/50'
+                          : 'text-gray-400 hover:text-white hover:bg-dark-border/50'
+                      }`}
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <button
@@ -171,24 +175,32 @@ export default function Navbar() {
         </div>
       </div>
 
-      {isOpen && (
-        <div className="md:hidden bg-dark/95 backdrop-blur-xl border-b border-dark-border">
-          <div className="px-6 py-4 flex flex-col gap-3">
-            {[...navLinks, ...moreLinks].map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`py-2 transition-colors duration-200 ${
-                  active === link.href ? 'text-accent' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="md:hidden bg-dark/95 backdrop-blur-xl border-b border-dark-border"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+          >
+            <div className="px-6 py-4 flex flex-col gap-3">
+              {[...navLinks, ...moreLinks].map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`py-2 transition-colors duration-200 ${
+                    active === link.href ? 'text-accent' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {link.name}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
     <Lightbox isOpen={photoOpen} onClose={() => setPhotoOpen(false)} src="/profile-pic.png" alt="Aaryan Bansal" />
     </>

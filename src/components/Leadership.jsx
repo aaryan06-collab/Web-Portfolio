@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Users } from 'lucide-react';
 import MagneticCard from './MagneticCard';
+import SectionHeading from './SectionHeading';
 import { fadeUp, staggerContainer } from '../data/animations';
 
 const leadership = [
@@ -20,21 +21,7 @@ export default function Leadership() {
   return (
     <section id="leadership" className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-            Leadership &{' '}
-            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
-              Community
-            </span>
-          </h2>
-          <div className="w-20 h-1 bg-accent mx-auto mb-16 rounded-full" />
-        </motion.div>
+        <SectionHeading pre="Leadership &" accent="Community" />
 
         <motion.div
           className="max-w-3xl mx-auto space-y-6"

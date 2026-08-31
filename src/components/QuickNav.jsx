@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
+import useScrollPosition from '../hooks/useScrollPosition';
 
 const SECTIONS = [
   '#about',
@@ -14,37 +15,20 @@ const SECTIONS = [
 ];
 
 export default function QuickNav() {
-  const [active, setActive] = useState(SECTIONS[0]);
+  const { scrollY } = useScrollPosition(0);
 
-  useEffect(() => {
-    let ticking = false;
-
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const pos = window.scrollY + window.innerHeight * 0.35;
-        let current = SECTIONS[0];
-        for (const id of SECTIONS) {
-          const el = document.querySelector(id);
-          if (el && el.getBoundingClientRect().top + window.scrollY <= pos) current = id;
-        }
-        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
-          current = SECTIONS[SECTIONS.length - 1];
-        }
-        setActive(current);
-        ticking = false;
-      });
-    };
-
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, []);
+  const active = useMemo(() => {
+    const pos = scrollY + window.innerHeight * 0.35;
+    let current = SECTIONS[0];
+    for (const id of SECTIONS) {
+      const el = document.querySelector(id);
+      if (el && el.getBoundingClientRect().top + scrollY <= pos) current = id;
+    }
+    if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 4) {
+      return SECTIONS[SECTIONS.length - 1];
+    }
+    return current;
+  }, [scrollY]);
 
   const goTo = (id) => {
     const el = document.querySelector(id);

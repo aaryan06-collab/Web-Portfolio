@@ -1,35 +1,95 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import MagneticCard from './MagneticCard';
 import CountUp from './CountUp';
+import SectionHeading from './SectionHeading';
 import { fadeUp, staggerContainer } from '../data/animations';
 
 const stats = [
-  { label: 'Projects', value: 6, suffix: '+' },
   { label: 'Certifications', value: 6 },
-  { label: 'CGPA', value: 7.2, decimals: 2 },
-  { label: 'Languages', value: 2 },
 ];
+
+const projectNames = [
+  'OTP-Based Secure Login System with Loan Prediction Model',
+  'Face Attendance Management Website',
+  'House Price Prediction System',
+  'Student Registration Form',
+  'Music Player Application',
+  'Calculator Application',
+];
+
+const languages = ['Hindi', 'English'];
+
+function LanguageStat() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = setInterval(() => setIndex((p) => (p + 1) % languages.length), 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <MagneticCard className="bg-dark-card border border-dark-border rounded-xl p-6 text-center hover:border-accent/30 transition-all duration-300 card-glow">
+      <div className="min-h-[2.5rem] mb-2 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 8, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.9 }}
+            transition={{ duration: 0.25 }}
+            className="text-2xl font-bold bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent whitespace-nowrap"
+          >
+            {languages[index]}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <div className="text-gray-500 text-sm">Languages</div>
+    </MagneticCard>
+  );
+}
+
+function ProjectFlip() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = setInterval(() => setIndex((p) => (p + 1) % projectNames.length), 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <MagneticCard
+      onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+      className="bg-dark-card border border-dark-border rounded-xl p-6 text-center hover:border-accent/30 transition-all duration-300 group card-glow cursor-pointer"
+    >
+      <div className="min-h-[4rem] mb-2 flex items-center justify-center" style={{ perspective: 800 }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ rotateX: -90, opacity: 0 }}
+            animate={{ rotateX: 0, opacity: 1 }}
+            exit={{ rotateX: 90, opacity: 0 }}
+            transition={{ duration: 0.45, ease: 'easeInOut' }}
+            className="text-sm md:text-base font-semibold bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent"
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            {projectNames[index]}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <div className="text-gray-500 text-sm">Projects</div>
+    </MagneticCard>
+  );
+}
 
 export default function About() {
   return (
     <section id="about" className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-            About{' '}
-            <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
-              Me
-            </span>
-          </h2>
-          <div className="w-20 h-1 bg-accent mx-auto mb-16 rounded-full" />
-        </motion.div>
+        <SectionHeading pre="About" accent="Me" />
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -66,6 +126,10 @@ export default function About() {
             viewport={{ once: true, amount: 0.3 }}
             variants={staggerContainer}
           >
+            <motion.div variants={fadeUp} transition={{ duration: 0.5 }}>
+              <LanguageStat />
+            </motion.div>
+
             {stats.map((stat) => (
               <motion.div
                 key={stat.label}
@@ -84,6 +148,14 @@ export default function About() {
                 </MagneticCard>
               </motion.div>
             ))}
+
+            <motion.div
+              className="md:col-span-2"
+              variants={fadeUp}
+              transition={{ duration: 0.5 }}
+            >
+              <ProjectFlip />
+            </motion.div>
           </motion.div>
         </div>
       </div>

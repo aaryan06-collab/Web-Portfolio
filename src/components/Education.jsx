@@ -1,24 +1,14 @@
 import { motion } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
 import MagneticCard from './MagneticCard';
+import SectionHeading from './SectionHeading';
 import { fadeUp } from '../data/animations';
 
 export default function Education() {
   return (
     <section id="education" className="py-24 px-6 bg-dark-card/50">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
-            Education
-          </h2>
-          <div className="w-20 h-1 bg-accent mx-auto mb-16 rounded-full" />
-        </motion.div>
+        <SectionHeading accent="Education" />
 
         <motion.div
           className="max-w-2xl mx-auto"

@@ -1,35 +1,10 @@
-import { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
+import useScrollPosition from '../hooks/useScrollPosition';
 
 export default function ScrollProgress() {
-  const [progress, setProgress] = useState(0);
-  const [showTop, setShowTop] = useState(false);
+  const { progress, scrolled } = useScrollPosition(400);
 
-  useEffect(() => {
-    let raf = 0;
-
-    const update = () => {
-      raf = 0;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollY = window.scrollY;
-      setProgress(docHeight > 0 ? Math.min((scrollY / docHeight) * 100, 100) : 0);
-      setShowTop(scrollY > 400);
-    };
-
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+  const showTop = scrolled;
 
   return (
     <>

@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import {
   motion,
   useMotionValue,
+  useMotionValueEvent,
   useMotionTemplate,
   useSpring,
   useScroll,
   useTransform,
+  useReducedMotion,
 } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, MailOpenIcon } from './Icons';
@@ -27,23 +29,46 @@ const roles = [
   'B.Tech IT Student',
   'Python Developer',
   'Open Source Contributor',
+  'Machine Learning Engineer',
+  'Data Science Learner',
+  'SaaS Builder',
+  'Problem Solver',
 ];
 
-const ROLE_DURATION = 3500;
 const WORD_DURATION = 0.5;
+const BASE_ROLE_DURATION = 2200;
+const ROLE_BUFFER = 300;
+
+function getRoleRevealMs(role) {
+  const words = role.split(' ');
+  const chars = role.length;
+  const stagger = WORD_DURATION / words.length;
+  const revealSeconds = (chars - 1) * stagger + WORD_DURATION;
+  return revealSeconds * 1000;
+}
+
+function getRoleDisplayMs(role) {
+  return Math.max(BASE_ROLE_DURATION, getRoleRevealMs(role) + ROLE_BUFFER);
+}
 
 function useRotatingRole() {
   const [index, setIndex] = useState(0);
+  const indexRef = useRef(0);
 
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return;
 
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % roles.length);
-    }, ROLE_DURATION);
+    let timer;
+    const advance = () => {
+      const next = (indexRef.current + 1) % roles.length;
+      indexRef.current = next;
+      setIndex(next);
+      timer = setTimeout(advance, getRoleDisplayMs(roles[next]));
+    };
 
-    return () => clearInterval(timer);
+    timer = setTimeout(advance, getRoleDisplayMs(roles[0]));
+    return () => clearTimeout(timer);
   }, []);
 
   return roles[index];
@@ -82,36 +107,32 @@ function RevealLine({ role }) {
   );
 }
 
-function RepelText({ text, className, style }) {
+function computeRepel(el, mx, my) {
+  if (!el) return { x: 0, y: 0 };
+  const rect = el.getBoundingClientRect();
+  const dx = mx - (rect.left + rect.width / 2);
+  const dy = my - (rect.top + rect.height / 2);
+  const dist = Math.hypot(dx, dy);
+  if (dist > 0 && dist < 400) {
+    const strength = (1 - dist / 400) * 26;
+    const norm = dist || 1;
+    return { x: (dx / norm) * strength, y: (dy / norm) * strength };
+  }
+  return { x: 0, y: 0 };
+}
+
+function RepelText({ text, className, style, mouseX, mouseY }) {
   const ref = useRef(null);
+  const reduce = useReducedMotion();
   const x = useSpring(0, { stiffness: 60, damping: 14 });
   const y = useSpring(0, { stiffness: 60, damping: 14 });
 
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  useMotionValueEvent(mouseX, 'change', (mx) => {
     if (reduce) return;
-
-    const onMove = (e) => {
-      const el = ref.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const dx = e.clientX - (rect.left + rect.width / 2);
-      const dy = e.clientY - (rect.top + rect.height / 2);
-      const dist = Math.hypot(dx, dy);
-      const strength = dist < 400 ? (1 - dist / 400) * 26 : 0;
-      if (strength > 0) {
-        const norm = dist || 1;
-        x.set((dx / norm) * strength);
-        y.set((dy / norm) * strength);
-      } else {
-        x.set(0);
-        y.set(0);
-      }
-    };
-
-    window.addEventListener('mousemove', onMove, { passive: true });
-    return () => window.removeEventListener('mousemove', onMove);
-  }, [x, y]);
+    const { x: nx, y: ny } = computeRepel(ref.current, mx, mouseY.get());
+    x.set(nx);
+    y.set(ny);
+  });
 
   return (
     <span ref={ref} className={className} style={style}>
@@ -163,6 +184,8 @@ export default function Hero() {
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
+  const mouseX = useMotionValue(-1000);
+  const mouseY = useMotionValue(-1000);
   const rotateX = useSpring(useMotionValue(0), { stiffness: 150, damping: 20 });
   const rotateY = useSpring(useMotionValue(0), { stiffness: 150, damping: 20 });
   const glowX = useSpring(useMotionValue(-1000), { stiffness: 120, damping: 18 });
@@ -179,6 +202,8 @@ export default function Hero() {
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
       mx.set(nx);
       my.set(ny);
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
       rotateY.set(nx * 5);
       rotateX.set(-ny * 5);
       glowX.set(e.clientX, true);
@@ -191,6 +216,8 @@ export default function Hero() {
     const onLeave = () => {
       mx.set(0);
       my.set(0);
+      mouseX.set(-1000);
+      mouseY.set(-1000);
       rotateX.set(0);
       rotateY.set(0);
       glowX.set(-1000);
@@ -204,7 +231,7 @@ export default function Hero() {
       window.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseleave', onLeave);
     };
-  }, [mx, my, rotateX, rotateY, glowX, glowY]);
+  }, [mx, my, mouseX, mouseY, rotateX, rotateY, glowX, glowY]);
 
   const { scrollY } = useScroll();
   const nameY = useTransform(scrollY, [0, 600], [0, 80]);
@@ -231,6 +258,8 @@ export default function Hero() {
           <RepelText
             key={`l-${i}`}
             text={item.text}
+            mouseX={mouseX}
+            mouseY={mouseY}
             className={`${decoClass(mobile)} animate-float`}
             style={{ top: item.top, left: item.left, animationDelay: item.delay }}
           />
@@ -242,6 +271,8 @@ export default function Hero() {
           <RepelText
             key={`r-${i}`}
             text={item.text}
+            mouseX={mouseX}
+            mouseY={mouseY}
             className={`${decoClass(mobile)} animate-float`}
             style={{ top: item.top, right: item.right, animationDelay: item.delay }}
           />
