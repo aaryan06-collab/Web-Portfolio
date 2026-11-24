@@ -16,7 +16,7 @@ const rules = [
   },
   {
     match: ['project', 'build', 'portfolio', 'what have you made'],
-    reply: 'Some projects: an OTP-based secure login with loan prediction, a face attendance website, house price prediction, a student registration form, a music player, and a calculator app.',
+    reply: 'My projects span AI/ML, hackathons, and web/apps: OTP-based secure login with loan prediction, face attendance website, house price prediction, AI FAQ chatbot, OCR text extractor, fraud network detection system, AI code reviewer, Companio App, UrbanCompass transit planner, hack26, abtalks, student registration form, music player, and calculator app.',
   },
   {
     match: ['experience', 'work', 'intern', 'job', 'career'],

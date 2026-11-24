@@ -17,6 +17,14 @@ const projectNames = [
   'Student Registration Form',
   'Music Player Application',
   'Calculator Application',
+  'Companio App',
+  'UrbanCompass Multi-Modal Transit Planner',
+  'AI FAQ Chatbot',
+  'OCR Text Extractor',
+  'Fraud Network Detection System',
+  'AI Code Reviewer',
+  'hack26',
+  'abtalks',
 ];
 
 const languages = ['Hindi', 'English'];
