@@ -6,14 +6,14 @@ import { fadeUp, staggerContainer } from '../data/animations';
 
 const leadership = [
   {
-    title: 'Core Engine Contributor (AI/ML)',
-    org: "ECSoC'2026",
-    description: 'Contributing to AI/ML initiatives and collaborative development.',
+    title: 'Open Source Contributor',
+    org: "ECSoC'26 · OSCI'26",
+    description: 'Contributed to open-source projects and collaborated with maintainers and peers.',
   },
   {
-    title: 'GCAF Program',
-    org: '2026',
-    description: 'Participated in the GCAF Program for community-driven growth and collaboration.',
+    title: 'Google Arcade Program',
+    org: "GCAF'2026",
+    description: 'Participated in the Google Arcade Program for community-driven growth and collaboration.',
   },
 ];
 

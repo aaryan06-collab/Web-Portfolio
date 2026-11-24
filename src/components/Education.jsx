@@ -32,7 +32,7 @@ export default function Education() {
                 </p>
                 <p className="text-gray-500 text-sm mb-3">2024 – Present</p>
                 <div className="inline-flex items-center gap-2 bg-accent/10 text-accent-light px-4 py-2 rounded-lg text-sm border border-accent/20">
-                  <span className="font-medium">CGPA:</span> 7.20 / 10
+                  <span className="font-medium">CGPA:</span> 7.25 / 10
                 </div>
               </div>
             </div>

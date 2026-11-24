@@ -20,11 +20,11 @@ const rules = [
   },
   {
     match: ['experience', 'work', 'intern', 'job', 'career'],
-    reply: 'I\'m an App Developer Team Leader at Belvo (since Jun 2026), a Python Programming Intern at CodeAlpha · Decode Labs, and hold an HR role at Amanitvam Foundation.',
+    reply: 'I\'ve held App Developer (3 months), App Dev Team Leader (2 months), and CEO/COO (1 month) roles at Belvo, plus AI/ML Engineer at The Entrepreneurship Network (3 months), Python Programming Intern at CodeAlpha · Decode Labs, Portfolio Designer at Foundic Network (3 months), and an HR role at Amanitvam Foundation.',
   },
   {
     match: ['education', 'study', 'college', 'university', 'degree', 'b.tech'],
-    reply: 'I\'m pursuing a B.Tech in Information Technology at Dr. Akhilesh Das Gupta Institute of Professional Studies (2024–present) with a CGPA of 7.20.',
+    reply: 'I\'m pursuing a B.Tech in Information Technology at Dr. Akhilesh Das Gupta Institute of Professional Studies (2024–present) with a CGPA of 7.25.',
   },
   {
     match: ['certificate', 'certification', 'courses'],
