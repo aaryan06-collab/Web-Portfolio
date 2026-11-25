@@ -71,7 +71,7 @@ const nonTechnicalExperiences = [
   },
   {
     title: 'HR Role',
-    company: 'Amanitvam Foundation',
+    company: 'Amaanitvam Foundation',
     date: 'Aug 2026 – Present',
     description: [
       'Assisted with human resources and team coordination responsibilities.',

@@ -19,7 +19,7 @@ export default function Footer() {
 
         <div className="flex items-center gap-4">
           <a
-            href="/cv.pdf"
+            href="/AARYAN%20BANSAL_RESUME.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-gray-500 hover:text-white linkedin-bounce"

@@ -308,7 +308,7 @@ export default function Hero() {
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <MagneticCard>
               <a
-                href="/cv.pdf"
+                href="/AARYAN%20BANSAL_RESUME.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ transform: 'translateZ(30px)' }}

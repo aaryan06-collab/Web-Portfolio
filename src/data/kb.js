@@ -20,7 +20,7 @@ const rules = [
   },
   {
     match: ['experience', 'work', 'intern', 'job', 'career'],
-    reply: 'I\'ve held App Developer (3 months), App Dev Team Leader (2 months), and CEO/COO (1 month) roles at Belvo, plus AI/ML Engineer at The Entrepreneurship Network (3 months), Python Programming Intern at CodeAlpha · Decode Labs, Portfolio Designer at Foundic Network (3 months), and an HR role at Amanitvam Foundation.',
+    reply: 'I\'ve held App Developer (3 months), App Dev Team Leader (2 months), and CEO/COO (1 month) roles at Belvo, plus AI/ML Engineer at The Entrepreneurship Network (3 months), Python Programming Intern at CodeAlpha · Decode Labs, Portfolio Designer at Foundic Network (3 months), and an HR role at Amaanitvam Foundation.',
   },
   {
     match: ['education', 'study', 'college', 'university', 'degree', 'b.tech'],
